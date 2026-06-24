@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EGY Noon Minutes Logistics — Org Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF0F3;
+    --grid:#E0E3E9;
+    --surface:#FFFFFF;
+    --ink:#1B2330;
+    --muted:#6A7281;
+    --faint:#9AA1AD;
+    --line:#C3C9D4;
+    --border:#E4E7EC;
+    --accent:#F2B705;
+    --accent-soft:#FBEFC9;
+    --accent-ink:#7A5B00;
+    --danger:#C0492F;
+    --shadow:0 1px 2px rgba(20,28,44,.05),0 8px 22px rgba(20,28,44,.07);
+    --shadow-hover:0 2px 4px rgba(20,28,44,.08),0 16px 34px rgba(20,28,44,.12);
+    --radius:14px;
+    --card-w:234px;
+    --conn:30px;
+    --l1:#2C5F8A;
+    --l1-soft:#E8F0F7;
+    --supervisor:#6B3FA0;
+    --supervisor-soft:#F0EAF9;
+    --tl:#1E7A5C;
+    --tl-soft:#E4F4EE;
+    --root-bg:#FDF6E3;
+    --root-border:#DCC78A;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    font-family:"Inter",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; height:100vh; overflow:hidden;
+  }
+
+  /* ═══════════════════════════════════════
+     HEADER — single unwrapped row
+  ═══════════════════════════════════════ */
+  header{
+    flex:0 0 auto;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    padding:0 18px;
+    height:56px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    overflow:hidden;          /* keeps everything on one line */
+    z-index:20;
+    white-space:nowrap;
+  }
+
+  /* Brand */
+  .brand{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+  .mark{
+    height:40px; padding:0 10px; border-radius:9px;
+    background:#FFD700;
+    display:grid; place-items:center; flex:0 0 auto;
+    box-shadow:0 2px 8px rgba(255,215,0,.5);
+  }
+  .mark-inner{
+    display:flex; flex-direction:column; align-items:center;
+    gap:0; user-select:none; line-height:1;
+  }
+  .mark-noon{
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:700; font-size:13px; color:#111111;
+    letter-spacing:.04em; line-height:1.1;
+  }
+  .mark-minutes{
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:700; font-size:10px; color:#E8000D;
+    letter-spacing:.05em; line-height:1.1;
+  }
+  .brand-text .eyebrow{
+    font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--faint); font-weight:600; line-height:1.3;
+  }
+  .brand-text h1{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:14.5px; font-weight:700; letter-spacing:-.01em;
+    margin:0; line-height:1.15; color:var(--ink); white-space:nowrap;
+  }
+
+  /* Divider */
+  .hdiv{ width:1px; height:26px; background:var(--border); flex:0 0 auto; }
+
+  /* Stat chips */
+  .stats{ display:flex; gap:6px; flex:0 0 auto; }
+  .chip{
+    display:flex; align-items:baseline; gap:5px;
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:999px; padding:4px 11px; white-space:nowrap;
+  }
+  .chip b{ font-family:"Space Grotesk",sans-serif; font-size:13.5px; font-weight:700; }
+  .chip span{ font-size:11px; color:var(--muted); }
+  .chip.open b{ color:var(--accent-ink); }
+
+  /* Push controls to the right */
+  .spacer{ flex:1 1 auto; min-width:8px; }
+
+  /* Search */
+  .search{ position:relative; display:flex; align-items:center; flex:0 0 auto; }
+  .search svg{ position:absolute; left:10px; width:14px; height:14px; color:var(--faint); pointer-events:none; }
+  .search input{
+    font-family:inherit; font-size:12.5px; color:var(--ink);
+    border:1px solid var(--border); background:var(--bg);
+    border-radius:999px; padding:7px 12px 7px 30px; width:170px;
+    transition:border-color .15s,box-shadow .15s,background .15s;
+  }
+  .search input:focus{ outline:none; border-color:var(--accent); background:var(--surface); box-shadow:0 0 0 3px var(--accent-soft); }
+  .search input::placeholder{ color:var(--faint); }
+
+  /* Buttons */
+  .btn{
+    font-family:inherit; font-size:12px; font-weight:500; color:var(--ink);
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:7px 11px; cursor:pointer; line-height:1;
+    display:inline-flex; align-items:center; gap:5px; flex:0 0 auto;
+    transition:border-color .15s,background .15s,transform .05s; white-space:nowrap;
+  }
+  .btn:hover{ border-color:var(--line); background:#FAFBFC; }
+  .btn:active{ transform:translateY(1px); }
+
+  /* Zoom group */
+  .zoomgroup{
+    display:flex; align-items:stretch; flex:0 0 auto;
+    border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface);
+  }
+  .zoomgroup button{
+    border:0; background:transparent; cursor:pointer; padding:0 9px;
+    color:var(--ink); display:grid; place-items:center;
+    border-right:1px solid var(--border);
+  }
+  .zoomgroup button:last-child{ border-right:0; }
+  .zoomgroup button:hover{ background:#FAFBFC; }
+  .zoomgroup .zlevel{
+    min-width:40px; text-align:center; font-size:11.5px; font-variant-numeric:tabular-nums;
+    color:var(--muted); display:grid; place-items:center; padding:0 2px;
+    border-right:1px solid var(--border);
+  }
+  .zoomgroup svg{ width:14px; height:14px; }
+
+  /* Sync pill */
+  .sync{ display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--muted); flex:0 0 auto; white-space:nowrap; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--faint); flex:0 0 auto; }
+  .sync.live .dot{ background:var(--accent); }
+  .sync.syncing .dot{ background:var(--accent); }
+  .sync.error .dot{ background:var(--danger); }
+  .sync .slabel b{ color:var(--ink); font-weight:600; }
+  .sync .retry{ color:var(--accent-ink); cursor:pointer; text-decoration:underline; font-weight:500; }
+
+  /* ═══════════════════════════════════════
+     CANVAS
+  ═══════════════════════════════════════ */
+  .canvas{
+    flex:1 1 auto; overflow:auto; position:relative;
+    background-color:var(--bg);
+    background-image:radial-gradient(var(--grid) 1.2px,transparent 1.2px);
+    background-size:24px 24px;
+  }
+  .stage{
+    min-width:max-content; min-height:max-content;
+    padding:50px 80px 110px;
+    display:flex; justify-content:center;
+  }
+
+  /* ═══════════════════════════════════════
+     TREE LAYOUT
+     Root card centred at top.
+     Layer-1 (direct reports) spread HORIZONTALLY below it.
+     Each L1's children stack VERTICALLY beneath them.
+  ═══════════════════════════════════════ */
+
+  /* Root wrapper */
+  .root-col{ display:flex; flex-direction:column; align-items:center; }
+
+  /* Trunk line: root → horizontal bar */
+  .trunk{ width:2px; height:var(--conn); background:var(--line); }
+
+  /* Horizontal row of L1 managers */
+  .l1-row{ display:flex; align-items:flex-start; position:relative; }
+
+  /* Horizontal crossbar connecting siblings */
+  .l1-row::before{
+    content:''; position:absolute;
+    top:0; left:0; right:0;
+    height:2px; background:var(--line);
+    /* trim to span only between first and last child centres */
+    margin:0;
+  }
+
+  /* Each L1 column */
+  .l1-col{
+    display:flex; flex-direction:column; align-items:center;
+    padding:0 18px;
+    position:relative;
+  }
+
+  /* Vertical drop from crossbar to L1 card */
+  .l1-drop{ width:2px; height:var(--conn); background:var(--line); }
+
+  /* Vertical trunk from L1 card down to its children */
+  .l1-trunk{ width:2px; height:var(--conn); background:var(--line); }
+
+  /* Children of an L1 — vertical stack */
+  .vc-block{ display:flex; flex-direction:column; align-items:flex-start; position:relative; }
+
+  /* Left rail that connects siblings */
+  .vc-rail{
+    position:absolute; left:22px; top:0; bottom:0; width:2px; background:var(--line);
+  }
+  /* Clip rail: starts at centre of first child, ends at centre of last */
+  .vc-block > .vc-item:first-child .vc-rail{ top:50%; }
+  .vc-block > .vc-item:last-child  .vc-rail{ bottom:50%; }
+  .vc-block > .vc-item:only-child  .vc-rail{ display:none; }
+
+  /* Each child item row */
+  .vc-item{ display:flex; align-items:center; position:relative; padding:7px 0; }
+
+  /* Horizontal arm from rail to card */
+  .vc-arm{ width:22px; height:2px; background:var(--line); flex:0 0 auto; margin-left:22px; }
+
+  /* ── node wrapper (holds card + toggle btn) ── */
+  .node{ position:relative; display:inline-block; }
+
+  /* ═══════════════════════════════════════
+     CARDS
+  ═══════════════════════════════════════ */
+  .card{
+    position:relative; width:var(--card-w);
+    background:var(--surface);
+    border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:15px 15px 13px;
+    transition:box-shadow .18s,transform .18s,border-color .18s;
+  }
+  .card:hover{ box-shadow:var(--shadow-hover); transform:translateY(-2px); border-color:var(--line); }
+
+  /* ROOT — warm amber background */
+  .card.root{
+    background:var(--root-bg);
+    border-color:var(--root-border);
+    border-width:1.5px;
+  }
+  .card.root::before{
+    content:''; position:absolute; inset:0 0 auto 0; height:4px;
+    background:linear-gradient(90deg,var(--accent),#F6C944);
+    border-radius:var(--radius) var(--radius) 0 0;
+  }
+
+  /* L1 manager */
+  .card.layer1{ border-left:4px solid var(--l1); border-color:var(--l1); }
+  .card.layer1 .avatar{ background:var(--l1) !important; }
+
+  /* Supervisor */
+  .card.role-supervisor{ border-left:4px solid var(--supervisor); }
+  .card.role-supervisor .avatar{ background:var(--supervisor) !important; }
+
+  /* Team Leader */
+  .card.role-tl{ border-left:4px solid var(--tl); }
+  .card.role-tl .avatar{ background:var(--tl) !important; }
+
+  /* Role pill badge */
+  .role-pill{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    border-radius:999px; padding:3px 8px; margin-bottom:8px;
+  }
+  .role-pill.pill-mgr{ background:var(--l1-soft); color:var(--l1); }
+  .role-pill.pill-sup{ background:var(--supervisor-soft); color:var(--supervisor); }
+  .role-pill.pill-tl{ background:var(--tl-soft); color:var(--tl); }
+  .role-pill .dot-sm{ width:5px; height:5px; border-radius:50%; background:currentColor; }
+
+  .card.vacant{ background:#F8F9FB; border-style:dashed; border-color:#CDD3DD; box-shadow:none; border-left-width:1px; }
+  .card.vacant:hover{ box-shadow:var(--shadow); }
+  .card.dim{ opacity:.28; filter:saturate(.5); }
+  .card.hit{ border-color:var(--accent) !important; box-shadow:0 0 0 3px var(--accent-soft),var(--shadow) !important; }
+
+  .top{ display:flex; gap:11px; align-items:center; }
+  .avatar{
+    width:44px; height:44px; border-radius:10px; flex:0 0 auto;
+    display:grid; place-items:center; color:#fff;
+    font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:14px;
+    overflow:hidden; position:relative;
+  }
+  .avatar img{
+    width:100%; height:100%; object-fit:cover; object-position:center top;
+    border-radius:10px; display:block; opacity:0;
+    transition:opacity .3s ease;
+  }
+  .avatar img[src]{ opacity:1; }
+  .avatar.vac{ background:transparent !important; color:var(--faint); border:1.5px dashed #C2C8D2; }
+  .who{ min-width:0; flex:1; }
+  .pname{
+    font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:14.5px;
+    line-height:1.2; letter-spacing:-.01em; color:var(--ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .pname.vac{ color:var(--faint); font-style:italic; font-weight:500; }
+  .ptitle{
+    font-size:11px; line-height:1.35; color:var(--muted); margin-top:3px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .reports-up{
+    font-size:10px; letter-spacing:.04em; color:var(--faint);
+    text-transform:uppercase; font-weight:600; margin-bottom:7px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .reports-up svg{ width:10px; height:10px; }
+
+  .contacts{ display:flex; flex-direction:column; gap:5px; margin-top:11px; }
+  .contact{
+    width:100%; min-width:0; display:flex; align-items:center; gap:6px;
+    border:1px solid var(--border); border-radius:8px; padding:5px 8px;
+    font-size:10.5px; color:var(--ink); text-decoration:none; background:var(--surface);
+    transition:background .14s,border-color .14s,color .14s;
+  }
+  .contact svg{ width:12px; height:12px; flex:0 0 auto; color:var(--muted); transition:color .14s; }
+  .contact .val{
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-variant-numeric:tabular-nums; font-size:10px; flex:1; min-width:0;
+  }
+  a.contact:hover{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  a.contact:hover svg{ color:var(--accent); }
+  a.contact:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .contact.empty{ color:var(--faint); border-style:dashed; cursor:default; }
+  .contact.empty svg{ color:var(--faint); }
+
+  .foot{ display:flex; align-items:center; margin-top:11px; }
+  .tenure{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11px; color:var(--muted); font-weight:500; flex-wrap:wrap;
+  }
+  .tenure svg{ width:11px; height:11px; color:var(--faint); flex:0 0 auto; }
+  .tenure .ten-label{ color:var(--muted); font-weight:500; white-space:nowrap; }
+  .tenure b{ color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; }
+  .tenure.future b{ color:var(--accent-ink); }
+  .pill-open{
+    font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--accent-ink); background:var(--accent-soft);
+    border-radius:999px; padding:3px 9px;
+  }
+
+  /* Toggle button */
+  .toggle{
+    position:absolute; bottom:-13px; left:50%; transform:translateX(-50%);
+    width:25px; height:25px; border-radius:50%; z-index:3;
+    background:var(--surface); border:2px solid var(--line); color:var(--ink);
+    display:grid; place-items:center; cursor:pointer; padding:0;
+    box-shadow:0 1px 3px rgba(20,28,44,.12);
+    transition:border-color .15s,color .15s,transform .05s;
+  }
+  .toggle:hover{ border-color:var(--accent); color:var(--accent-ink); }
+  .toggle:active{ transform:translateX(-50%) scale(.9); }
+  .toggle svg{ width:12px; height:12px; }
+  .toggle .cnt{
+    position:absolute; top:-8px; right:-9px; min-width:15px; height:15px; padding:0 3px;
+    background:var(--ink); color:#fff; border-radius:999px;
+    font-size:9px; font-weight:600; display:grid; place-items:center; line-height:1;
+  }
+
+  /* ═══════════════════════════════════════
+     LEGEND — bottom-right, small
+  ═══════════════════════════════════════ */
+  .legend{
+    position:fixed; bottom:16px; right:20px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--border);
+    border-radius:10px; padding:9px 14px;
+    display:flex; flex-direction:column; gap:6px;
+    box-shadow:0 2px 12px rgba(20,28,44,.10); z-index:30;
+  }
+  .legend-title{
+    font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--faint); padding-bottom:3px; border-bottom:1px solid var(--border);
+  }
+  .legend-item{ display:flex; align-items:center; gap:8px; font-size:11px; font-weight:500; color:var(--ink); }
+  .legend-swatch{ width:10px; height:10px; border-radius:3px; flex:0 0 auto; }
+
+  /* Animations */
+  @media (prefers-reduced-motion:no-preference){
+    .node{ animation:rise .35s cubic-bezier(.2,.7,.3,1) both; }
+    @keyframes rise{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+    .sync.live .dot{ animation:pulse 2.2s ease-out infinite; }
+    @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(242,183,5,.5)} 70%{box-shadow:0 0 0 7px rgba(242,183,5,0)} 100%{box-shadow:0 0 0 0 rgba(242,183,5,0)} }
+  }
+
+  .empty-state{ margin:auto; text-align:center; color:var(--muted); padding:60px; }
+  .empty-state h2{ font-family:"Space Grotesk"; color:var(--ink); margin:0 0 6px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════ SINGLE-ROW HEADER ═══════ -->
+<header>
+  <div class="brand">
+    <div class="mark"><div class="mark-inner"><span class="mark-noon">noon</span><span class="mark-minutes">minutes</span></div></div>
+    <div class="brand-text">
+      <div class="eyebrow">Org Chart</div>
+      <h1>EGY Noon Minutes Logistics</h1>
+    </div>
+  </div>
+
+  <div class="hdiv"></div>
+
+  <div class="stats">
+    <div class="chip"><b id="stat-total">—</b><span>roles</span></div>
+    <div class="chip"><b id="stat-filled">—</b><span>filled</span></div>
+    <div class="chip open"><b id="stat-open">—</b><span>open</span></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <label class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" type="search" placeholder="Find person or title…" autocomplete="off" aria-label="Search" />
+  </label>
+
+  <button class="btn" id="expand-all">Expand all</button>
+  <button class="btn" id="collapse-all">Collapse all</button>
+
+  <div class="zoomgroup" role="group" aria-label="Zoom">
+    <button id="zoom-out" aria-label="Zoom out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+    </button>
+    <span class="zlevel" id="zoom-level">100%</span>
+    <button id="zoom-in" aria-label="Zoom in">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button id="zoom-reset" aria-label="Reset zoom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </div>
+
+  <div class="hdiv"></div>
+
+  <div class="sync" id="sync">
+    <span class="dot"></span>
+    <span class="slabel" id="sync-label">Loading…</span>
+  </div>
+</header>
+
+<!-- ═══════ CANVAS ═══════ -->
+<main class="canvas" id="canvas">
+  <div class="stage" id="stage">
+    <div id="tree"></div>
+  </div>
+</main>
+
+<!-- ═══════ LEGEND — bottom right ═══════ -->
+<div class="legend">
+  <div class="legend-title">Colour key</div>
+  <div class="legend-item">
+    <span class="legend-swatch" style="background:var(--accent);border:1px solid #DCC78A"></span>
+    <span>AVP / Leadership</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-swatch" style="background:var(--l1)"></span>
+    <span>Manager</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-swatch" style="background:var(--supervisor)"></span>
+    <span>Supervisor</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-swatch" style="background:var(--tl)"></span>
+    <span>Team Leader</span>
+  </div>
+</div>
+
+<script>
+/* ── CONFIG ── */
+const SHEET_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSBFFh1CyaMUNaqc47X18ieDuJIWStSRRufJlMB6IFUGgeIPS23lMtvgp6KtV9xa0BpadvjY76BjjFZ/pub?output=csv";
+const REFRESH_MS=60000;
+
+// CORS proxies tried in order — first one to succeed wins
+const CORS_PROXIES=[
+  url=>`https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url=>`https://thingproxy.freeboard.io/fetch/${url}`,
+];
+
+// Up-to-date snapshot — shown instantly; also the offline fallback
+const SNAPSHOT_CSV=`Name,Mail,Mobile number,Title,Reports to,Joining date,Photo
+Mina Raafat,meldiek@noon.com,201224132202,AVP Logistics,Gian Luca,6/16/2026
+Mahmoud Karam,mkaram@noon.com,201116160495,Logistics Supply & Vendor Manager,Mina Raafat,6/1/2026
+Marwan Habiba,,,Logistics Operations Manager East Cairo,Mina Raafat,6/30/2026
+Moemen Magdy,,,Logistics Operations Manager West Cairo,Mina Raafat,
+Fady Ashraf,,,Team Leader - Logistics Training,Mahmoud Karam,6/9/2026
+Mohamed Abdelmoety,,,"Logistics Onboarding, Senior Team Leader",Mahmoud Karam,6/9/2026
+To be filled,,,Supervisor - Vendor Managemenr,Mahmoud Karam,
+Assem Abdelwahid,aawahid@noon.com,201104334012,Senior Team Leader - Logistics Operation,Moemen Magdy,6/2/2026
+Mina Isaac Fouad,mifouad@noon.com,201557854717,Logistics Senior Supervisor,Marwan Habiba,6/9/2026
+Ashraf Ahmed,abrahmed@noon.com,201044404495,Logistics Supervisor,Marwan Habiba,6/2/2026
+Muhammad Maher,,201113864012,Logistics Supervisor,Moemen Magdy,6/16/2026
+To be filled,,,Logistics Supervisor,Marwan Habiba,
+To be filled,,,Logistics Inventory Team leader,Mahmoud Karam,
+Maged Mohamed,,,Senior Team Leader,Moemen Magdy,
+Ahmed Ragheb,aragheb@noon.com,201551620034,Team Leader,Marwan Habiba,6/2/2026
+To be filled,,,Team Leader,Marwan Habiba,
+To be filled,,,Team Leader,Moemen Magdy,
+To be filled,,,Team Leader,Moemen Magdy,`;
+
+/* ── STATE ── */
+let DATA=[],ROOTS=[],collapsed=new Set(),query="",zoom=1,lastSync=null;
+
+/* ── CSV ── */
+function parseCSV(text){
+  const rows=[];let row=[],field="",q=false,i=0;
+  while(i<text.length){
+    const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){field+='"';i+=2;continue;}q=false;i++;continue;}field+=c;i++;continue;}
+    if(c==='"'){q=true;i++;continue;}
+    if(c===','){row.push(field);field="";i++;continue;}
+    if(c==='\r'){i++;continue;}
+    if(c==='\n'){row.push(field);rows.push(row);row=[];field="";i++;continue;}
+    field+=c;i++;
+  }
+  if(field.length||row.length){row.push(field);rows.push(row);}
+  return rows;
+}
+function colIdx(h,...n){
+  const lh=h.map(s=>s.toLowerCase().trim());
+  for(const x of n){const i=lh.indexOf(x);if(i>=0)return i;}
+  for(const x of n){const i=lh.findIndex(s=>s.includes(x));if(i>=0)return i;}
+  return -1;
+}
+function buildFromCSV(text){
+  const rows=parseCSV(text).filter(r=>r.some(c=>(c||"").trim()!==""));
+  if(!rows.length)return[];
+  const h=rows[0];
+  const ci={name:colIdx(h,"name"),mail:colIdx(h,"mail","email"),mobile:colIdx(h,"mobile number","mobile","phone"),
+    title:colIdx(h,"title","position","role"),reports:colIdx(h,"reports to","reports","manager"),
+    join:colIdx(h,"joining date","join","start date"),
+    photo:colIdx(h,"photo","picture","image","pic")};
+  const g=(r,i)=>(i>=0&&r[i]!=null)?String(r[i]).trim():"";
+  return rows.slice(1).map((r,idx)=>({id:idx,name:g(r,ci.name),mail:g(r,ci.mail),
+    mobile:g(r,ci.mobile),title:g(r,ci.title),reports:g(r,ci.reports),join:g(r,ci.join),
+    photo:g(r,ci.photo)}))
+    .filter(p=>p.name||p.title);
+}
+
+/* ── ROLE ── */
+function isVacant(p){return p.name.toLowerCase()==="to be filled"||p.name==="";}
+function keyOf(p){return(p.name+"|"+p.title+"|"+p.reports).toLowerCase();}
+function classifyRole(p){
+  const t=(p.title||"").toLowerCase();
+  if(!p.parent)return"root";
+  if(p.parent&&!p.parent.parent)return"manager";
+  if(t.includes("supervisor"))return"supervisor";
+  if(t.includes("team leader")||t.includes("team lead"))return"tl";
+  return"other";
+}
+
+/* ── TREE ── */
+function buildTree(people){
+  const byName={};
+  people.forEach(p=>{if(!isVacant(p))byName[p.name.toLowerCase()]=p;});
+  people.forEach(p=>{p.children=[];p.parent=null;});
+  const roots=[];
+  people.forEach(p=>{
+    const mgr=p.reports?byName[p.reports.toLowerCase()]:null;
+    if(mgr&&mgr!==p){mgr.children.push(p);p.parent=mgr;}else roots.push(p);
+  });
+  return roots;
+}
+
+/* ── TENURE ── */
+function parseDate(s){
+  if(!s)return null;s=s.trim();
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return new Date(+m[3],+m[1]-1,+m[2]);
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  const d=new Date(s);return isNaN(d)?null:d;
+}
+function fmtShort(d){return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});}
+function fmtLong(d){return d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}
+function tenure(j){
+  const d=parseDate(j);
+  if(!d)return{text:"Not set",title:"Joining date not recorded",cls:"none"};
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(d>today)return{text:"Starts "+fmtShort(d),title:"Joins "+fmtLong(d),cls:"future"};
+  let y=today.getFullYear()-d.getFullYear(),mo=today.getMonth()-d.getMonth(),day=today.getDate()-d.getDate();
+  if(day<0){mo--;day+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
+  if(mo<0){y--;mo+=12;}
+  const parts=[];
+  if(y>0){parts.push(y+(y===1?" yr":" yrs"));if(mo>0)parts.push(mo+(mo===1?" mo":" mos"));}
+  else if(mo>0){parts.push(mo+(mo===1?" mo":" mos"));if(day>0)parts.push(day+(day===1?" day":" days"));}
+  else{parts.push(day===0?"Joined today":day+(day===1?" day":" days"));}
+  return{text:parts.join(" "),title:"Joined "+fmtLong(d),cls:"ok"};
+}
+
+/* ── HELPERS ── */
+function esc(s){return(s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const AV=["#3E5C76","#5B7B7A","#7A5C7E","#6E7C4E","#9A6A4F","#4E5D8C","#7C6A3C","#566273"];
+function hash(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h;}
+function initials(n){const w=n.trim().split(/\s+/).filter(Boolean);if(!w.length)return"?";return((w[0][0]||"")+(w.length>1?w[w.length-1][0]:"")).toUpperCase();}
+function phone(r){const d=(r||"").replace(/[^\d]/g,"");if(!d)return null;let disp="+"+d;if(d.length===12&&d.startsWith("20"))disp=`+20 ${d.slice(2,5)} ${d.slice(5,8)} ${d.slice(8)}`;return{tel:"+"+d,disp};}
+
+// Normalise Google Drive sharing links to direct image URLs
+function photoUrl(raw){
+  if(!raw) return null;
+  raw=raw.trim();
+  if(!raw) return null;
+  // Extract Google Drive file ID from any Drive URL format
+  let m=raw.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
+  if(!m) m=raw.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+  if(m){
+    // lh3.googleusercontent.com/d/ is the most reliable CDN for Drive images
+    return `https://lh3.googleusercontent.com/d/${m[1]}`;
+  }
+  // Already a lh3 or uc link — return as-is
+  if(raw.includes("googleusercontent.com")||raw.includes("drive.google.com/uc")) return raw;
+  // Any other direct URL — return as-is
+  return raw;
+}
+
+const ICON={
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h3l1.5 5L7 9.5a13 13 0 0 0 7.5 7.5L16 15l5 1.5V20a2 2 0 0 1-2.2 2A17 17 0 0 1 3 6.2 2 2 0 0 1 5 3Z"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  minus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg>',
+};
+
+/* ── SEARCH ── */
+function ancestorsOf(p){const a=new Set();let c=p.parent;while(c){a.add(c.id);c=c.parent;}return a;}
+function computeSearch(){
+  if(!query)return{active:false};
+  const hits=new Set(),keep=new Set();
+  DATA.forEach(p=>{if((p.name+" "+p.title).toLowerCase().includes(query)){hits.add(p.id);keep.add(p.id);ancestorsOf(p).forEach(id=>keep.add(id));}});
+  return{active:true,hits,keep};
+}
+
+/* ── CARD HTML ── */
+function cardHTML(p,s){
+  const vac=isVacant(p);
+  const role=classifyRole(p);
+  const isRoot=!p.parent;
+  const imgUrl=!vac?photoUrl(p.photo):null;
+  const avFallbackBg=AV[hash(p.name)%AV.length];
+  const avFallbackTxt=esc(initials(p.name));
+  const av=vac
+    ?`<div class="avatar vac">+</div>`
+    :imgUrl
+      ?`<div class="avatar av-photo" style="background:#D8DDE6" data-fb-bg="${avFallbackBg}" data-fb-txt="${avFallbackTxt}"><img src="${esc(imgUrl)}" alt="${esc(p.name)}" onerror="avImgFail(this.parentElement)" /></div>`
+      :`<div class="avatar" style="background:${avFallbackBg}">${avFallbackTxt}</div>`;
+  const ten=tenure(p.join);
+  const footer=vac
+    ?`<div class="foot"><span class="pill-open">Open role</span></div>`
+    :`<div class="foot"><span class="tenure ${ten.cls}" title="${esc(ten.title)}">${ICON.clock}<span class="ten-label">Tenure in company:&nbsp;</span><b>${esc(ten.text)}</b></span></div>`;
+  const mailC=p.mail
+    ?`<a class="contact" href="mailto:${esc(p.mail)}">${ICON.mail}<span class="val">${esc(p.mail)}</span></a>`
+    :`<span class="contact empty">${ICON.mail}<span class="val">No email</span></span>`;
+  const ph=phone(p.mobile);
+  const phoneC=ph
+    ?`<a class="contact" href="tel:${esc(ph.tel)}">${ICON.phone}<span class="val">${esc(ph.disp)}</span></a>`
+    :`<span class="contact empty">${ICON.phone}<span class="val">No mobile</span></span>`;
+  const upLabel=isRoot&&p.reports?`<div class="reports-up">${ICON.up}<span>Reports to ${esc(p.reports)}</span></div>`:"";
+  let pill="";
+  if(!vac){
+    if(role==="manager")    pill=`<div class="role-pill pill-mgr"><span class="dot-sm"></span>Manager</div>`;
+    else if(role==="supervisor") pill=`<div class="role-pill pill-sup"><span class="dot-sm"></span>Supervisor</div>`;
+    else if(role==="tl")    pill=`<div class="role-pill pill-tl"><span class="dot-sm"></span>Team Leader</div>`;
+  }
+  let cls="card";
+  if(isRoot) cls+=" root";
+  if(!vac&&role==="manager")     cls+=" layer1";
+  if(!vac&&role==="supervisor")  cls+=" role-supervisor";
+  if(!vac&&role==="tl")          cls+=" role-tl";
+  if(vac) cls+=" vacant";
+  if(s.active){if(s.hits.has(p.id))cls+=" hit";else if(!s.keep.has(p.id))cls+=" dim";}
+  let toggle="";
+  if(p.children.length){
+    const isCol=!s.active&&collapsed.has(keyOf(p));
+    toggle=`<button class="toggle" data-toggle="${esc(keyOf(p))}" aria-label="${isCol?'Expand':'Collapse'} ${esc(p.name)}'s team">`
+      +(isCol?ICON.plus+`<span class="cnt">${p.children.length}</span>`:ICON.minus)+`</button>`;
+  }
+  return`<div class="node"><div class="${cls}">${upLabel}${pill}
+    <div class="top">${av}<div class="who">
+      <div class="pname${vac?' vac':''}" title="${esc(p.name)}">${esc(p.name||"To be filled")}</div>
+      <div class="ptitle" title="${esc(p.title)}">${esc(p.title)}</div>
+    </div></div>
+    <div class="contacts">${mailC}${phoneC}</div>
+    ${footer}${toggle}
+  </div></div>`;
+}
+
+/* ── TREE RENDERER ──
+   Root centred, L1 direct reports in a HORIZONTAL row,
+   their children (L2+) stacked VERTICALLY below each.
+── */
+function renderTree(roots,s){
+  if(!roots.length)return`<div class="empty-state"><h2>No people yet</h2><p>Add people to the Org Chart tab.</p></div>`;
+  return roots.map(r=>renderRoot(r,s)).join("");
+}
+
+function renderRoot(root,s){
+  const showKids=root.children.length&&(s.active||!collapsed.has(keyOf(root)));
+  let html=`<div class="root-col">${cardHTML(root,s)}`;
+  if(showKids){
+    html+=`<div class="trunk"></div>`;
+    html+=renderL1Row(root.children,s);
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function renderL1Row(l1s,s){
+  // Build the horizontal row of L1 manager columns
+  let html=`<div class="l1-row">`;
+  l1s.forEach(child=>{
+    const showKids=child.children.length&&(s.active||!collapsed.has(keyOf(child)));
+    html+=`<div class="l1-col">`;
+    html+=`<div class="l1-drop"></div>`;
+    html+=cardHTML(child,s);
+    if(showKids){
+      html+=`<div class="l1-trunk"></div>`;
+      html+=renderVcBlock(child.children,s);
+    }
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+
+// Sort order: supervisor (0) → team leader (1) → other (2) → vacant (3)
+// Within each group, maintain original sheet order
+function roleOrder(p){
+  if(isVacant(p)) return 3;
+  const t=(p.title||"").toLowerCase();
+  if(t.includes("supervisor")) return 0;
+  if(t.includes("team leader")||t.includes("team lead")) return 1;
+  return 2;
+}
+function sortedChildren(children){
+  // stable sort — preserves original order within same group
+  return [...children].sort((a,b)=>roleOrder(a)-roleOrder(b));
+}
+
+function renderVcBlock(children,s){
+  let html=`<div class="vc-block">`;
+  html+=`<div class="vc-rail"></div>`;
+  sortedChildren(children).forEach(gc=>{
+    html+=`<div class="vc-item">`;
+    html+=`<div class="vc-arm"></div>`;
+    html+=cardHTML(gc,s);
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+
+/* ── RENDER ── */
+function render(){
+  const tree=document.getElementById("tree");
+  const s=computeSearch();
+  tree.innerHTML=renderTree(ROOTS,s);
+  const total=DATA.length,open=DATA.filter(isVacant).length;
+  document.getElementById("stat-total").textContent=total;
+  document.getElementById("stat-filled").textContent=total-open;
+  document.getElementById("stat-open").textContent=open;
+  applyZoom();
+}
+
+/* ── DATA ── */
+function ingest(people){DATA=people;ROOTS=buildTree(people);}
+function loadSnapshot(){ingest(buildFromCSV(SNAPSHOT_CSV));render();centerOnce();}
+
+function setSync(state){
+  const el=document.getElementById("sync"),label=document.getElementById("sync-label");
+  el.className="sync "+state;
+  if(state==="live"){const t=lastSync?lastSync.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"";label.innerHTML=`<b>Live</b> · synced ${t}`;}
+  else if(state==="syncing"){label.textContent="Syncing…";}
+  else if(state==="error"){label.innerHTML=`Last sync · <span class="retry" id="retry">retry</span>`;const r=document.getElementById("retry");if(r)r.onclick=()=>sync();}
+}
+
+async function fetchCSV(){
+  const base=SHEET_CSV_URL+"&cachebust="+Date.now();
+  // Try direct first (works locally / when CORS is open)
+  try{
+    const r=await fetch(base,{cache:"no-store",mode:"cors"});
+    if(r.ok){const t=await r.text();if(t.trim().length>50)return t;}
+  }catch(_){}
+  // Try each CORS proxy in order
+  for(const proxy of CORS_PROXIES){
+    try{
+      const r=await fetch(proxy(base),{cache:"no-store"});
+      if(r.ok){const t=await r.text();if(t.trim().length>50)return t;}
+    }catch(_){}
+  }
+  throw new Error("All fetch attempts failed");
+}
+
+async function sync(){
+  setSync("syncing");
+  try{
+    const text=await fetchCSV();
+    const people=buildFromCSV(text);
+    if(!people.length)throw new Error("empty");
+    ingest(people);lastSync=new Date();render();setSync("live");
+  }catch(e){setSync("error");}
+}
+
+/* ── ZOOM ── */
+function applyZoom(){document.getElementById("stage").style.zoom=zoom;document.getElementById("zoom-level").textContent=Math.round(zoom*100)+"%";}
+function setZoom(z){zoom=Math.min(1.4,Math.max(.35,+z.toFixed(2)));applyZoom();}
+
+let centered=false;
+function centerOnce(){
+  if(centered)return;centered=true;
+  requestAnimationFrame(()=>{
+    const c=document.getElementById("canvas"),st=document.getElementById("stage");
+    c.scrollLeft=Math.max(0,(st.scrollWidth-c.clientWidth)/2);
+  });
+}
+
+/* ── EVENTS ── */
+document.getElementById("tree").addEventListener("click",e=>{
+  const t=e.target.closest("[data-toggle]");if(!t)return;
+  const k=t.getAttribute("data-toggle");
+  if(collapsed.has(k))collapsed.delete(k);else collapsed.add(k);
+  render();
+});
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value.trim().toLowerCase();render();});
+document.getElementById("expand-all").onclick=()=>{collapsed.clear();render();};
+document.getElementById("collapse-all").onclick=()=>{
+  collapsed.clear();
+  DATA.forEach(p=>{if(p.children.length&&p.parent)collapsed.add(keyOf(p));});
+  render();
+};
+document.getElementById("zoom-in").onclick=()=>setZoom(zoom+.1);
+document.getElementById("zoom-out").onclick=()=>setZoom(zoom-.1);
+document.getElementById("zoom-reset").onclick=()=>setZoom(1);
+
+/* ── PHOTO FALLBACK ── */
+function avImgFail(el){
+  el.style.background=el.dataset.fbBg||"#566273";
+  el.innerHTML=`<span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff">${el.dataset.fbTxt||"?"}</span>`;
+}
+
+/* ── BOOT ── */
+loadSnapshot();
+sync();
+setInterval(sync,REFRESH_MS);
+</script>
+</body>
+</html>
