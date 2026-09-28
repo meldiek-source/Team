@@ -783,7 +783,7 @@
 
 <script>
 /* ── CONFIG ── */
-const SHEET_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSBFFh1CyaMUNaqc47X18ieDuJIWStSRRufJlMB6IFUGgeIPS23lMtvgp6KtV9xa0BpadvjY76BjjFZ/pub?output=csv";
+const ORG_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRlmZSHKxs8qqE5FfM_76aNzA8MTLortEgbMm41DaRjOVQ/exec?type=org";
 const REFRESH_MS=60000;
 
 // CORS proxies tried in order — first one to succeed wins
@@ -860,9 +860,16 @@ function keyOf(p){return(p.name+"|"+p.title+"|"+p.reports).toLowerCase();}
 function classifyRole(p){
   const t=(p.title||"").toLowerCase();
   if(!p.parent)return"root";
+  // Layer 1: direct reports to root = manager
   if(p.parent&&!p.parent.parent)return"manager";
+  // Layer 2: supervisor (by title)
   if(t.includes("supervisor"))return"supervisor";
-  if(t.includes("team leader")||t.includes("team lead"))return"tl";
+  // Layer 3: team leader (by title)
+  if(t.includes("team leader")||t.includes("team lead")||t.includes("senior team"))return"tl";
+  // Fallback: classify by depth
+  const depth=(()=>{let d=0,x=p;while(x.parent){d++;x=x.parent;}return d;})();
+  if(depth===2)return"supervisor";
+  if(depth>=3)return"tl";
   return"other";
 }
 
@@ -1081,7 +1088,16 @@ function render(){
 
 /* ── DATA ── */
 function ingest(people){DATA=people;ROOTS=buildTree(people);}
-function loadSnapshot(){ingest(buildFromCSV(SNAPSHOT_CSV));render();centerOnce();}
+function loadSnapshot(){
+  // Parse snapshot CSV into the same row-array format buildFromRows expects
+  const lines=SNAPSHOT_CSV.trim().split("\n");
+  const rows=lines.map(line=>{
+    const cells=[];let cur="",q=false;
+    for(const c of line){if(c==='"'&&!q){q=true;continue;}if(c==='"'&&q){q=false;continue;}if(c===","&&!q){cells.push(cur);cur="";continue;}cur+=c;}
+    cells.push(cur);return cells;
+  });
+  ingest(buildFromRows(rows));render();centerOnce();
+}
 
 function setSync(state){
   const el=document.getElementById("sync"),label=document.getElementById("sync-label");
@@ -1091,28 +1107,49 @@ function setSync(state){
   else if(state==="error"){label.innerHTML=`Last sync · <span class="retry" id="retry">retry</span>`;const r=document.getElementById("retry");if(r)r.onclick=()=>sync();}
 }
 
-async function fetchCSV(){
-  const base=SHEET_CSV_URL+"&cachebust="+Date.now();
-  // Try direct first (works locally / when CORS is open)
+async function fetchOrg(){
+  const base=ORG_API+"&cachebust="+Date.now();
+  // Try direct (works on GitHub Pages — Apps Script allows CORS)
   try{
     const r=await fetch(base,{cache:"no-store",mode:"cors"});
-    if(r.ok){const t=await r.text();if(t.trim().length>50)return t;}
+    if(r.ok){const j=await r.json();if(Array.isArray(j)&&j.length>1)return j;}
   }catch(_){}
-  // Try each CORS proxy in order
+  // Proxy fallbacks
   for(const proxy of CORS_PROXIES){
     try{
       const r=await fetch(proxy(base),{cache:"no-store"});
-      if(r.ok){const t=await r.text();if(t.trim().length>50)return t;}
+      if(r.ok){const t=await r.text();if(t.trim().startsWith("["))return JSON.parse(t);}
     }catch(_){}
   }
   throw new Error("All fetch attempts failed");
 }
 
+function buildFromRows(rows){
+  // rows[0] = header: Name, Mail, Mobile number, Title, Reports to, Joining date, photo
+  if(!rows||rows.length<2)return[];
+  const h=rows[0].map(c=>String(c).toLowerCase().trim());
+  const ci={
+    name:h.findIndex(c=>c.includes("name")),
+    mail:h.findIndex(c=>c.includes("mail")||c.includes("email")),
+    mobile:h.findIndex(c=>c.includes("mobile")||c.includes("phone")),
+    title:h.findIndex(c=>c.includes("title")||c.includes("position")),
+    reports:h.findIndex(c=>c.includes("reports")),
+    join:h.findIndex(c=>c.includes("join")||c.includes("start")),
+    photo:h.findIndex(c=>c.includes("photo")||c.includes("picture")||c.includes("image")),
+  };
+  const g=(r,i)=>(i>=0&&r[i]!=null)?String(r[i]).trim():"";
+  return rows.slice(1)
+    .map((r,idx)=>({id:idx,name:g(r,ci.name),mail:g(r,ci.mail),
+      mobile:g(r,ci.mobile),title:g(r,ci.title),reports:g(r,ci.reports),
+      join:g(r,ci.join),photo:g(r,ci.photo)}))
+    .filter(p=>p.name||p.title);
+}
+
 async function sync(){
   setSync("syncing");
   try{
-    const text=await fetchCSV();
-    const people=buildFromCSV(text);
+    const rows=await fetchOrg();
+    const people=buildFromRows(rows);
     if(!people.length)throw new Error("empty");
     ingest(people);lastSync=new Date();render();setSync("live");
   }catch(e){setSync("error");}
