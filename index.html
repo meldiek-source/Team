@@ -801,19 +801,21 @@ Marwan Habiba,mahabiba@noon.com,201272190204,East Cairo Logistics Manager,Mina R
 Moemen Magdy,Mnmorsy@noon.com,201116866807,West Cairo Logistics Manager,Mina Raafat,7/14/2026
 Fady Ashraf,ffarid@noon.com,201121607660,Team Leader - Logistics Training,Mahmoud Karam,6/9/2026
 Mohamed Abdelmoety,mabdelmoety@noon.com,201116571739,"Logistics Onboarding, Senior Team Leader",Mahmoud Karam,6/9/2026
-To be filled,,,Supervisor - Vendor Managemenr,Mahmoud Karam,
-Assem Abdelwahid,aawahid@noon.com,201104334012,Senior Team Leader - Logistics Operation,Marwan Habiba,6/2/2026
+Mostafa Fathy,,,Supervisor - Vendor Managemenr,Mahmoud Karam,
+Assem Abdelwahid,aawahid@noon.com,201104334012,Senior Team Leader - Logistics Operation,Ashraf Ahmed,6/2/2026
 Mina Isaac Fouad,mifouad@noon.com,201036448777,Logistics Senior Supervisor,Marwan Habiba,6/9/2026
-Ashraf Ahmed,abrahmed@noon.com,201044404495,Logistics Supervisor,Moemen Magdy,6/2/2026
+Ashraf Ahmed,abrahmed@noon.com,201055885333,Logistics Supervisor,Moemen Magdy,6/2/2026
 Muhammad Maher,mdsoliman@noon.com,201113864012,Logistics Supervisor,Moemen Magdy,6/16/2026
-Omar Srour,,201116123871,Logistics Senior Supervisor,Marwan Habiba,8/15/2026
-To be filled,,,Logistics Inventory Team leader,Mahmoud Karam,
-Maged Mohamed,Mhassanien@noon.com,201553009321,Senior Team Leader,Moemen Magdy,7/7/2026
-Ahmed Ragheb,aragheb@noon.com,201551620034,Team Leader,Moemen Magdy,6/2/2026
-Hossam Mohamed,,,Senior Team Leader,Marwan Habiba,8/11/2026
-To be filled,,,Team Leader,Moemen Magdy,
-To be filled,,,Team Leader,Marwan Habiba,
-To be filled,,,Logistics Finance Manager,Mina Raafat,`;
+Omar Srour,osrour@noon.com,201155464753,Logistics Senior Supervisor,Marwan Habiba,8/15/2026
+Omar Awad,oawad@noon.com,201147815655,Logistics Inventory Team leader,Mahmoud Karam,
+Maged Mohamed,Mhassanien@noon.com,201553009321,Senior Team Leader,Mina Isaac Fouad,7/7/2026
+Ahmed Ragheb,aragheb@noon.com,201551620034,Team Leader,Muhammad Maher,6/2/2026
+Hossam Mohamed,habdel@noon.com,201500390867,Senior Team Leader,Omar Srour,8/11/2026
+Ahmed Essawy,,,Team Leader,Mina Isaac Fouad,
+Abdullah Aref,,,Team Leader,Omar Srour,
+Abdullah Mahmoud,,,Team Leader,Muhammad Maher,
+Ziad Khaled,,,Team Leader,Ashraf Ahmed,
+Mohamed Abu Zaid,,,Senior Team Leader - Alexandria,Marwan Habiba,`;
 
 /* ── STATE ── */
 let DATA=[],ROOTS=[],collapsed=new Set(),query="",zoom=1,lastSync=null;
@@ -859,18 +861,19 @@ function isVacant(p){return p.name.toLowerCase()==="to be filled"||p.name==="";}
 function keyOf(p){return(p.name+"|"+p.title+"|"+p.reports).toLowerCase();}
 function classifyRole(p){
   const t=(p.title||"").toLowerCase();
-  if(!p.parent)return"root";
-  // Layer 1: direct reports to root = manager
-  if(p.parent&&!p.parent.parent)return"manager";
-  // Layer 2: supervisor (by title)
+  if(!p.parent) return "root";
+  // Title-based classification is most reliable
+  if(t.includes("avp")||t.includes("vp"))return"root";
+  if(t.includes("manager")&&!t.includes("team"))return"manager";
   if(t.includes("supervisor"))return"supervisor";
-  // Layer 3: team leader (by title)
-  if(t.includes("team leader")||t.includes("team lead")||t.includes("senior team"))return"tl";
-  // Fallback: classify by depth
-  const depth=(()=>{let d=0,x=p;while(x.parent){d++;x=x.parent;}return d;})();
+  if(t.includes("team leader")||t.includes("team lead")||
+     t.includes("senior team leader")||t.includes("senior team lead"))return"tl";
+  // Fallback to tree depth
+  let depth=0,x=p;
+  while(x.parent){depth++;x=x.parent;}
+  if(depth===1)return"manager";
   if(depth===2)return"supervisor";
-  if(depth>=3)return"tl";
-  return"other";
+  return"tl";
 }
 
 /* ── TREE ── */
