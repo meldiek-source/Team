@@ -1068,9 +1068,14 @@ function renderVcBlock(children,s){
   let html=`<div class="vc-block">`;
   html+=`<div class="vc-rail"></div>`;
   sortedChildren(children).forEach(gc=>{
+    const showKids=gc.children.length&&(s.active||!collapsed.has(keyOf(gc)));
     html+=`<div class="vc-item">`;
     html+=`<div class="vc-arm"></div>`;
     html+=cardHTML(gc,s);
+    // Recurse: render this node's children (e.g. TLs under Supervisors)
+    if(showKids){
+      html+=renderVcBlock(gc.children,s);
+    }
     html+=`</div>`;
   });
   html+=`</div>`;
