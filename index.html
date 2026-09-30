@@ -384,161 +384,74 @@
 
   .empty-state{ margin:auto; text-align:center; color:var(--muted); padding:60px; }
   .empty-state h2{ font-family:"Space Grotesk"; color:var(--ink); margin:0 0 6px; }
-  /* ══ STORES PAGE ══ */
-  #page-stores{ flex-direction:column; }
-  .sb-stats{ flex:0 0 auto; display:flex; align-items:stretch; background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; }
-  .sb-stat{ display:flex; flex-direction:column; justify-content:center; padding:12px 28px 12px 0; margin-right:28px; border-right:1px solid var(--border); }
-  .sb-stat:last-child{ border-right:none; margin-right:0; }
-  .sb-stat-num{ font-family:"Space Grotesk",sans-serif; font-size:26px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:3px; }
-  .sb-stat-label{ font-size:11px; color:var(--muted); font-weight:500; white-space:nowrap; }
-  .sb-stat-num.green{ color:#1E7A5C; }
-  .sb-stat-num.amber{ color:#B8860B; }
-  .sb-filters{ flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:10px 24px; background:var(--bg); border-bottom:1px solid var(--border); }
-  .sb-search{ height:32px; padding:0 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; color:var(--ink); font-family:inherit; outline:none; width:200px; }
-  .sb-search:focus{ border-color:var(--line); }
-  .sb-filter-btn{ height:32px; padding:0 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .14s; white-space:nowrap; }
-  .sb-filter-btn:hover{ border-color:var(--line); color:var(--ink); }
-  .sb-filter-btn.active{ color:#fff; border-color:transparent; }
-  /* 3-column body */
-  .sb-body{ flex:1 1 auto; min-height:0; display:flex; overflow:hidden; }
-  /* Side panels — team members */
-  .sb-side-panel{
-    flex:0 0 230px; min-height:0; overflow-y:auto;
-    display:flex; flex-direction:column;
-  }
-  .sb-side-left{ border-right:1px solid var(--border); }
-  .sb-side-right{ border-left:1px solid var(--border); }
-  /* panel heading */
-  .sb-panel-heading{
-    position:sticky; top:0; z-index:2;
-    font-family:"Space Grotesk",sans-serif; font-size:11.5px; font-weight:700;
-    color:#fff; padding:10px 14px;
-    display:flex; align-items:center; gap:8px;
-    letter-spacing:.01em;
-  }
-  /* member row — fades from manager color to white */
-  .sb-member{
-    display:flex; flex-direction:column; gap:6px;
-    padding:10px 12px; border-bottom:1px solid rgba(0,0,0,.06);
-    transition:filter .12s;
-  }
-  .sb-member:hover{ filter:brightness(.96); }
-  .sb-member-top{ display:flex; align-items:center; gap:8px; }
-  .sb-member-av{
-    width:30px; height:30px; border-radius:7px; flex:0 0 auto;
-    display:grid; place-items:center; overflow:hidden;
-    font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:10px; color:#fff;
-    box-shadow:0 1px 4px rgba(0,0,0,.18);
-  }
-  .sb-member-av img{ width:100%; height:100%; object-fit:cover; object-position:center top; border-radius:6px; }
-  .sb-member-meta{ flex:1; min-width:0; }
-  .sb-member-name{
-    font-size:11px; font-weight:700; color:var(--ink);
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;
-  }
-  .sb-member-title{
-    font-size:9.5px; color:var(--muted);
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;
-  }
-  .sb-member-role{
-    font-size:8.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
-    padding:2px 6px; border-radius:999px; flex:0 0 auto; white-space:nowrap;
-  }
-  .role-sup{ background:rgba(107,63,160,.15); color:var(--supervisor); }
-  .role-tl{ background:rgba(30,122,92,.15); color:var(--tl); }
-  /* contact buttons row */
-  .sb-member-btns{ display:flex; gap:4px; }
-  .sb-member-btn{
-    flex:1; height:22px; border:1px solid rgba(0,0,0,.12); border-radius:6px;
-    background:rgba(255,255,255,.55); cursor:pointer; font-size:9px; font-weight:500;
-    color:var(--ink); display:flex; align-items:center; justify-content:center; gap:3px;
-    text-decoration:none; font-family:inherit; transition:all .12s; backdrop-filter:blur(4px);
-  }
-  .sb-member-btn svg{ width:10px; height:10px; flex:0 0 auto; }
-  .sb-member-btn.call:hover{ background:#1E7A5C; color:#fff; border-color:#1E7A5C; }
-  .sb-member-btn.mail:hover{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
-  .sb-member-btn.wa:hover{ background:#25D366; color:#fff; border-color:#25D366; }
-  /* Centre board */
-  .sb-board{ flex:1 1 auto; min-height:0; overflow:auto; display:flex; gap:16px; padding:20px 20px 24px; align-items:flex-start; justify-content:center; }
-  .sb-col{ flex:0 0 300px; display:flex; flex-direction:column; gap:0; }
-  .sb-col-header{ display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:10px 10px 0 0; font-family:"Space Grotesk",sans-serif; font-size:13px; font-weight:700; color:#fff; }
-  .sb-col-header-count{ margin-left:auto; background:rgba(255,255,255,.25); font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; }
-  .sb-col-body{ background:var(--surface); border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; overflow:hidden; }
-  .sb-card{ display:flex; align-items:center; gap:9px; padding:9px 12px; border-bottom:1px solid var(--border); transition:background .12s; }
-  .sb-card:last-child{ border-bottom:none; }
-  .sb-card:hover{ background:var(--bg); }
-  .sb-card.hidden{ display:none; }
-  .sb-card-icon{ width:28px; height:28px; border-radius:7px; display:grid; place-items:center; flex:0 0 auto; }
-  .sb-card-body{ flex:1; min-width:0; }
-  .sb-card-name{ font-size:12px; font-weight:500; color:var(--ink); line-height:1.3; }
-  .sb-card-badge{ font-size:9px; font-weight:700; padding:2px 7px; border-radius:999px; flex:0 0 auto; white-space:nowrap; text-transform:uppercase; letter-spacing:.04em; }
-  .badge-active{ background:#E4F4EE; color:#1E7A5C; }
-  .badge-soon{ background:#FEF3C7; color:#92620A; }
-  .sb-card{ display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); transition:box-shadow .15s,transform .15s,border-color .15s; }
 
-  /* ── MOBILE RESPONSIVE ── */
-  @media (max-width: 768px){
-    /* Header: compress */
-    header{ padding:0 12px; gap:8px; height:auto; min-height:50px; flex-wrap:wrap; }
-    .brand-text h1{ font-size:12px; }
-    .brand-text .eyebrow{ display:none; }
-    .mark img{ height:36px; }
-    .stats{ display:none; }
-    .search input{ width:120px; font-size:11px; }
-    .btn{ font-size:11px; padding:6px 8px; }
-    .zoomgroup{ display:none; }
-    .sync .slabel b{ display:none; }
-    .spacer{ display:none; }
-
-    /* Nav tabs: smaller */
-    .nav-tabs{ padding:0 8px; }
-    .nav-tab{ padding:0 10px; font-size:11px; height:36px; gap:5px; }
-    .nav-tab svg{ display:none; }
-
-    /* Stores page: stack vertically on mobile */
-    .sb-stats{ padding:0 12px; overflow-x:auto; }
-    .sb-stat{ padding:8px 16px 8px 0; margin-right:16px; }
-    .sb-stat-num{ font-size:20px; }
-    .sb-stat-label{ font-size:10px; }
-
-    .sb-filters{ padding:8px 12px; gap:6px; flex-wrap:wrap; }
-    .sb-search{ width:100%; }
-
-    /* Mobile: hide side panels, show board full width */
-    .sb-body{ flex-direction:column; overflow-y:auto; overflow-x:hidden; }
-    .sb-side-panel{ display:none; }
-    .sb-board{
-      flex:none; width:100%; padding:12px;
-      flex-direction:column; gap:12px;
-      overflow:visible; justify-content:flex-start;
-    }
-    .sb-col{ flex:none; width:100%; }
-    .sb-col-header{ font-size:12px; padding:10px 12px; }
-
-    /* Org chart: allow horizontal scroll on mobile */
-    .canvas{ overflow:auto; -webkit-overflow-scrolling:touch; }
-    .stage{ padding:20px 40px 60px; }
-
-    /* On-call: tighter padding */
-    .oc-scroll{ padding:16px 16px 60px; }
-    .oc-hero{ padding:20px; }
-    .oc-hero-name{ font-size:18px; }
-    .oc-hero-btns{ gap:6px; }
-    .oc-hero-btn{ padding:7px 12px; font-size:11px; }
-    .oc-grid{ grid-template-columns:1fr; }
-  }
-
-
-  .sb-card:hover{ box-shadow:var(--shadow); transform:translateY(-1px); border-color:var(--line); }
-  .sb-card.hidden{ display:none; }
-  .sb-card-icon{ width:32px; height:32px; border-radius:8px; display:grid; place-items:center; flex:0 0 auto; }
-  .sb-card-body{ flex:1; min-width:0; }
-  .sb-card-name{ font-size:12px; font-weight:600; color:var(--ink); line-height:1.3; }
-  .sb-card-meta{ font-size:10.5px; color:var(--muted); margin-top:1px; }
-  .sb-card-badge{ font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; flex:0 0 auto; white-space:nowrap; text-transform:uppercase; letter-spacing:.04em; }
-  .badge-active{ background:#E4F4EE; color:#1E7A5C; }
-  .badge-soon{ background:#FEF3C7; color:#92620A; }
-  .empty-state{ margin:auto; text-align:center; color:var(--muted); padding:60px; }
+  /* ══ STORE MAP PAGE ══ */
+  #page-stores{ flex-direction:column; background:var(--bg); }
+  .sm-head{ flex:0 0 auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 24px; background:var(--surface); border-bottom:1px solid var(--border); }
+  .sm-search-wrap{ position:relative; flex:1; min-width:160px; max-width:320px; }
+  .sm-search-wrap svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--muted); pointer-events:none; }
+  .sm-search{ width:100%; height:34px; padding:0 10px 0 32px; border-radius:8px; border:1px solid var(--border); background:var(--bg); font-size:12.5px; color:var(--ink); font-family:inherit; outline:none; }
+  .sm-search:focus{ border-color:var(--accent); }
+  .sm-filters{ display:flex; gap:6px; flex-wrap:wrap; }
+  .sm-filter{ height:34px; padding:0 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .14s; white-space:nowrap; }
+  .sm-filter:hover{ color:var(--ink); border-color:var(--line); }
+  .sm-filter.active{ color:#fff; border-color:transparent; background:#1B2330; }
+  .sm-filter.active.f-active{ background:#1E7A5C; }
+  .sm-filter.active.f-soon{ background:#B8860B; }
+  .sm-stats{ margin-left:auto; display:flex; gap:18px; }
+  .sm-stat{ text-align:center; }
+  .sm-stat-n{ font-family:"Space Grotesk",sans-serif; font-size:20px; font-weight:700; color:var(--ink); line-height:1; }
+  .sm-stat-n.green{ color:#1E7A5C; }
+  .sm-stat-n.amber{ color:#B8860B; }
+  .sm-stat-l{ font-size:10px; color:var(--muted); margin-top:2px; white-space:nowrap; }
+  .sm-grid{ flex:1 1 auto; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; padding:20px 24px 32px; align-content:start; }
+  .sm-card{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; cursor:pointer; transition:box-shadow .15s,transform .15s,border-color .15s; display:flex; flex-direction:column; gap:8px; user-select:none; }
+  .sm-card:hover{ box-shadow:0 4px 16px rgba(20,28,44,.08); transform:translateY(-2px); border-color:var(--line); }
+  .sm-card.hidden{ display:none; }
+  .sm-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .sm-card-name{ font-family:"Space Grotesk",sans-serif; font-size:13px; font-weight:600; color:var(--ink); line-height:1.3; flex:1; }
+  .sm-badge{ font-size:9px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; text-transform:uppercase; letter-spacing:.04em; flex:0 0 auto; }
+  .sm-badge.active{ background:#E4F4EE; color:#1E7A5C; }
+  .sm-badge.soon{ background:#FEF3C7; color:#92620A; }
+  .sm-card-people{ display:flex; flex-direction:column; gap:4px; }
+  .sm-card-person{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+  .sm-card-person-av{ width:20px; height:20px; border-radius:5px; flex:0 0 auto; display:grid; place-items:center; overflow:hidden; font-size:7px; font-weight:700; color:#fff; }
+  .sm-card-person-av img{ width:100%; height:100%; object-fit:cover; object-position:center top; border-radius:4px; }
+  .sm-card-person-name{ font-weight:500; color:var(--ink); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sm-card-person-role{ font-size:8.5px; font-weight:700; text-transform:uppercase; padding:1px 5px; border-radius:4px; flex:0 0 auto; }
+  .sm-card-person-role.sup{ background:var(--supervisor-soft); color:var(--supervisor); }
+  .sm-card-person-role.tl{ background:var(--tl-soft); color:var(--tl); }
+  /* Detail popup */
+  .sm-popup-overlay{ display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.42); backdrop-filter:blur(4px); align-items:flex-end; justify-content:center; }
+  .sm-popup-overlay.open{ display:flex; animation:smFade .18s ease; }
+  @keyframes smFade{ from{opacity:0} to{opacity:1} }
+  .sm-popup{ width:100%; max-width:480px; max-height:85vh; background:var(--surface); border-radius:20px 20px 0 0; display:flex; flex-direction:column; overflow:hidden; animation:smUp .22s ease; }
+  @media(min-width:560px){ .sm-popup-overlay{ align-items:center; } .sm-popup{ border-radius:16px; max-height:75vh; } }
+  @keyframes smUp{ from{transform:translateY(24px);opacity:0} to{transform:none;opacity:1} }
+  .sm-popup-handle{ width:36px; height:4px; border-radius:2px; background:var(--border2); margin:10px auto 0; flex:0 0 auto; }
+  .sm-popup-header{ flex:0 0 auto; padding:16px 18px 14px; display:flex; align-items:flex-start; justify-content:space-between; border-bottom:1px solid var(--border); gap:12px; }
+  .sm-popup-titles{ flex:1; min-width:0; }
+  .sm-popup-title{ font-family:"Space Grotesk",sans-serif; font-size:16px; font-weight:700; color:var(--ink); line-height:1.2; }
+  .sm-popup-sub{ font-size:11px; color:var(--muted); margin-top:4px; }
+  .sm-popup-close{ width:30px; height:30px; border-radius:50%; border:none; background:var(--bg); cursor:pointer; font-size:18px; color:var(--muted); display:grid; place-items:center; flex:0 0 auto; }
+  .sm-popup-body{ flex:1 1 auto; overflow-y:auto; padding:16px 18px 28px; display:flex; flex-direction:column; gap:12px; }
+  .sm-person{ display:flex; flex-direction:column; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px; }
+  .sm-person-top{ display:flex; align-items:center; gap:12px; }
+  .sm-person-av{ width:44px; height:44px; border-radius:10px; flex:0 0 auto; display:grid; place-items:center; overflow:hidden; font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:14px; color:#fff; }
+  .sm-person-av img{ width:100%; height:100%; object-fit:cover; object-position:center top; border-radius:9px; }
+  .sm-person-info{ flex:1; min-width:0; }
+  .sm-person-name{ font-family:"Space Grotesk",sans-serif; font-size:14px; font-weight:700; color:var(--ink); }
+  .sm-person-title{ font-size:11px; color:var(--muted); margin-top:2px; }
+  .sm-person-role{ font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:999px; align-self:flex-start; margin-top:4px; }
+  .sm-person-role.sup{ background:var(--supervisor-soft); color:var(--supervisor); }
+  .sm-person-role.tl{ background:var(--tl-soft); color:var(--tl); }
+  .sm-person-btns{ display:flex; gap:6px; }
+  .sm-person-btn{ flex:1; height:32px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; font-size:11px; font-weight:500; color:var(--ink); display:flex; align-items:center; justify-content:center; gap:5px; text-decoration:none; font-family:inherit; transition:all .13s; }
+  .sm-person-btn svg{ width:13px; height:13px; }
+  .sm-person-btn.call:hover{ background:#1E7A5C; color:#fff; border-color:#1E7A5C; }
+  .sm-person-btn.mail:hover{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .sm-person-btn.wa:hover{ background:#25D366; color:#fff; border-color:#25D366; }
+  .sm-role-label{ font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); }
   .empty-state h2{ font-family:"Space Grotesk"; color:var(--ink); margin:0 0 6px; }
 
   /* ── TEAM POPUP MODAL ── */
@@ -732,7 +645,43 @@
   </div>
 </div>
 
-<!-- ═══════ ON-CALL PAGE ═══════ -->
+<!-- ═══════ STORE MAP PAGE ═══════ -->
+<div class="page" id="page-stores">
+  <div class="sm-head">
+    <div class="sm-search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="sm-search" id="sm-search" type="text" placeholder="Search store, supervisor, team leader…" oninput="smFilter()">
+    </div>
+    <div class="sm-filters">
+      <button class="sm-filter active" data-f="all" onclick="smSetFilter(this,'all')">All</button>
+      <button class="sm-filter f-active" data-f="active" onclick="smSetFilter(this,'active')">Active</button>
+      <button class="sm-filter f-soon" data-f="soon" onclick="smSetFilter(this,'soon')">Opening soon</button>
+    </div>
+    <div class="sm-stats">
+      <div class="sm-stat"><div class="sm-stat-n" id="sm-n-total">—</div><div class="sm-stat-l">Total</div></div>
+      <div class="sm-stat"><div class="sm-stat-n green" id="sm-n-active">—</div><div class="sm-stat-l">Active</div></div>
+      <div class="sm-stat"><div class="sm-stat-n amber" id="sm-n-soon">—</div><div class="sm-stat-l">Soon</div></div>
+    </div>
+  </div>
+  <div class="sm-grid" id="sm-grid">
+    <div class="empty-state"><h2>Loading stores…</h2></div>
+  </div>
+</div>
+
+<!-- ═══════ STORE DETAIL POPUP ═══════ -->
+<div class="sm-popup-overlay" id="sm-popup-overlay" onclick="smClosePopup(event)">
+  <div class="sm-popup">
+    <div class="sm-popup-handle"></div>
+    <div class="sm-popup-header">
+      <div class="sm-popup-titles">
+        <div class="sm-popup-title" id="sm-popup-name"></div>
+        <div class="sm-popup-sub" id="sm-popup-sub"></div>
+      </div>
+      <button class="sm-popup-close" onclick="smClosePopup()">✕</button>
+    </div>
+    <div class="sm-popup-body" id="sm-popup-body"></div>
+  </div>
+</div>
 <div class="page" id="page-oncall">
   <div class="oc-scroll">
     <div class="oc-inner" id="oc-main">
@@ -741,45 +690,6 @@
   </div>
 </div>
 
-<!-- ═══════ STORES PAGE ═══════ -->
-<div class="page" id="page-stores">
-  <div class="sb-stats">
-    <div class="sb-stat"><div class="sb-stat-num" id="st-total">—</div><div class="sb-stat-label">Total stores</div></div>
-    <div class="sb-stat"><div class="sb-stat-num green" id="st-active">—</div><div class="sb-stat-label">Active now</div></div>
-    <div class="sb-stat"><div class="sb-stat-num amber" id="st-soon">—</div><div class="sb-stat-label">Opening soon</div></div>
-    <div class="sb-stat"><div class="sb-stat-num" id="st-teams">—</div><div class="sb-stat-label">Teams</div></div>
-  </div>
-  <div class="sb-filters">
-    <input class="sb-search" id="sb-search" type="text" placeholder="🔍  Search stores…" oninput="sbFilter()">
-    <button class="sb-filter-btn active" data-filter="all" onclick="sbSetFilter(this,'all')" style="background:#1B2330;color:#fff">All</button>
-    <button class="sb-filter-btn" data-filter="active" onclick="sbSetFilter(this,'active')">Active</button>
-    <button class="sb-filter-btn" data-filter="soon" onclick="sbSetFilter(this,'soon')">Opening soon</button>
-  </div>
-  <div class="sb-body">
-    <!-- Left: Marwan team panel -->
-    <div class="sb-side-panel sb-side-left" id="sb-team-marwan"></div>
-    <!-- Centre: store board -->
-    <div class="sb-board" id="sb-board"></div>
-    <!-- Right: Moamen team panel -->
-    <div class="sb-side-panel sb-side-right" id="sb-team-moamen"></div>
-  </div>
-</div>
-
-
-<!-- ═══════ TEAM POPUP MODAL ═══════ -->
-<div class="team-modal-overlay" id="team-modal-overlay" onclick="closeTeamModal(event)">
-  <div class="team-modal" id="team-modal">
-    <div class="team-modal-handle"></div>
-    <div class="team-modal-header">
-      <div class="team-modal-titles">
-        <div class="team-modal-title" id="modal-team-name">Team</div>
-        <div class="team-modal-store" id="modal-store-name"></div>
-      </div>
-      <button class="team-modal-close" onclick="closeTeamModal()">✕</button>
-    </div>
-    <div class="team-modal-body" id="modal-body"></div>
-  </div>
-</div>
 
 <script>
 /* ── CONFIG ── */
@@ -1347,34 +1257,173 @@ syncOncall();
 setInterval(syncOncall,REFRESH_MS);
 
 /* ════════════════════════════════════════
-   TERRITORY BOARD
+   STORE MAP
 ════════════════════════════════════════ */
-const STORES_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRlmZSHKxs8qqE5FfM_76aNzA8MTLortEgbMm41DaRjOVQ/exec?type=stores";
+const SM_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRlmZSHKxs8qqE5FfM_76aNzA8MTLortEgbMm41DaRjOVQ/exec?type=stores";
 
-// Team config — name/color only; stores come from the sheet
-const SB_TEAMS=[
-  {name:"East Cairo & Sahel", key:"marwan", color:"#1a3a6b"},
-  {name:"West & Central Cairo", key:"moamen", color:"#7B1717"},
-];
+let SM_STORES=[];   // parsed store objects
+let smCurFilter="all";
 
-// Stores loaded dynamically from sheet; keyed by lowercase store name
-let SB_STORES_LIVE=null; // null = not yet loaded
-
-function parseStoresRows(rows){
-  // Col A = Store Name, Col B = Status, Col C = Team (Marwan / Moemen)
-  const map={};
+// Parse rows from Apps Script JSON
+// Col A=Store, B=Status, C=Supervisor, D=Team Leader, E=Team (optional)
+function smParseRows(rows){
+  if(!rows||rows.length<2)return[];
+  const out=[];
   for(let i=1;i<rows.length;i++){
     const r=rows[i];
     const name=(r[0]||"").toString().trim();
-    const status=(r[1]||"").toString().trim().toLowerCase();
-    const teamRaw=(r[2]||"").toString().trim().toLowerCase();
     if(!name||name==="Store Name")continue;
-    const st=status.includes("active")?"active":"soon";
-    const team=teamRaw.includes("marwan")?"marwan":(teamRaw.includes("moem")||teamRaw.includes("moam"))?"moamen":"moamen";
-    map[name.toLowerCase()]={name,status:st,team};
+    const status=(r[1]||"").toString().trim().toLowerCase();
+    out.push({
+      name,
+      status:status.includes("active")?"active":"soon",
+      supervisor:(r[2]||"").toString().trim(),
+      tl:(r[3]||"").toString().trim(),
+      team:(r[4]||"").toString().trim(),
+    });
   }
-  return map;
+  return out;
 }
+
+// Look up a person in org chart DATA by name
+function smFindPerson(name){
+  if(!name||!DATA.length)return null;
+  const nl=name.toLowerCase().trim();
+  return DATA.find(p=>{
+    const pl=p.name.toLowerCase().trim();
+    return pl===nl||pl.includes(nl)||nl.includes(pl);
+  })||null;
+}
+
+// Build avatar HTML for store popup (larger version)
+function smAvHtml(person,size=44){
+  if(!person) return`<div class="sm-person-av" style="background:#CDD3DD;color:#9AA1AD"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>`;
+  const bg=AV[hash(person.name)%AV.length];
+  const ini=initials(person.name)||"?";
+  const img=photoUrl(person.photo);
+  if(img)return`<div class="sm-person-av" style="background:${bg}" data-fb-bg="${bg}" data-fb-txt="${esc(ini)}"><img src="${esc(img)}" alt="${esc(ini)}" onerror="avImgFail(this.parentElement)"></div>`;
+  return`<div class="sm-person-av" style="background:${bg}">${esc(ini)}</div>`;
+}
+
+// Small avatar for card preview
+function smSmallAv(person){
+  if(!person)return`<div class="sm-card-person-av" style="background:#CDD3DD"></div>`;
+  const bg=AV[hash(person.name)%AV.length];
+  const ini=(initials(person.name)||"?").slice(0,2);
+  const img=photoUrl(person.photo);
+  if(img)return`<div class="sm-card-person-av" style="background:${bg}" data-fb-bg="${bg}" data-fb-txt="${esc(ini)}"><img src="${esc(img)}" alt="${esc(ini)}" onerror="avImgFail(this.parentElement)"></div>`;
+  return`<div class="sm-card-person-av" style="background:${bg}">${esc(ini)}</div>`;
+}
+
+function smRenderGrid(){
+  const grid=document.getElementById("sm-grid");
+  if(!SM_STORES.length){grid.innerHTML=`<div class="empty-state"><h2>No stores found</h2></div>`;return;}
+  let total=0,active=0,soon=0;
+  let html="";
+  SM_STORES.forEach((s,i)=>{
+    total++;
+    if(s.status==="active")active++;else soon++;
+    const supPerson=smFindPerson(s.supervisor);
+    const tlPerson=smFindPerson(s.tl);
+    const supLine=s.supervisor?`<div class="sm-card-person">${smSmallAv(supPerson)}<span class="sm-card-person-name">${esc(s.supervisor)}</span><span class="sm-card-person-role sup">SUP</span></div>`:"";
+    const tlLine=s.tl?`<div class="sm-card-person">${smSmallAv(tlPerson)}<span class="sm-card-person-name">${esc(s.tl)}</span><span class="sm-card-person-role tl">TL</span></div>`:"";
+    html+=`<div class="sm-card" data-status="${s.status}" data-name="${esc(s.name.toLowerCase())}" data-sup="${esc((s.supervisor||"").toLowerCase())}" data-tl="${esc((s.tl||"").toLowerCase())}" onclick="smOpenPopup(${i})">
+      <div class="sm-card-top">
+        <div class="sm-card-name">${esc(s.name)}</div>
+        <span class="sm-badge ${s.status}">${s.status==="active"?"Active":"Soon"}</span>
+      </div>
+      <div class="sm-card-people">${supLine}${tlLine}</div>
+    </div>`;
+  });
+  grid.innerHTML=html;
+  document.getElementById("sm-n-total").textContent=total;
+  document.getElementById("sm-n-active").textContent=active;
+  document.getElementById("sm-n-soon").textContent=soon;
+}
+
+function smSetFilter(btn,val){
+  smCurFilter=val;
+  document.querySelectorAll(".sm-filter").forEach(b=>{
+    b.classList.toggle("active",b.dataset.f===val);
+  });
+  smFilter();
+}
+
+function smFilter(){
+  const q=document.getElementById("sm-search").value.toLowerCase().trim();
+  document.querySelectorAll(".sm-card").forEach(card=>{
+    const nameMatch=!q||card.dataset.name.includes(q)||card.dataset.sup.includes(q)||card.dataset.tl.includes(q);
+    const statusMatch=smCurFilter==="all"||card.dataset.status===smCurFilter;
+    card.classList.toggle("hidden",!(nameMatch&&statusMatch));
+  });
+}
+
+function smOpenPopup(idx){
+  const s=SM_STORES[idx];if(!s)return;
+  document.getElementById("sm-popup-name").textContent=s.name;
+  document.getElementById("sm-popup-sub").textContent=s.status==="active"?"🟢 Active":"🟡 Opening soon";
+  const body=document.getElementById("sm-popup-body");
+  body.innerHTML="";
+
+  function personBlock(nameStr,roleType){
+    if(!nameStr)return;
+    const p=smFindPerson(nameStr);
+    const roleLabel=roleType==="sup"?"Supervisor":"Team Leader";
+    const lbl=document.createElement("div");lbl.className="sm-role-label";lbl.textContent=roleLabel;
+    body.appendChild(lbl);
+    const block=document.createElement("div");block.className="sm-person";
+    const ph=p?phone(p.mobile):null;
+    const btnsHtml=`<div class="sm-person-btns">
+      ${ph?`<a class="sm-person-btn call" href="tel:${esc(ph.tel)}">${ICON.phone} Call</a>`:""}
+      ${p&&p.mail?`<button class="sm-person-btn mail copy-mail" onclick="copyMail('${esc(p.mail)}')">${ICON.mail} Email</button>`:""}
+      ${ph?`<a class="sm-person-btn wa" href="https://wa.me/${esc(ph.tel.replace(/\+/,''))}" target="_blank">${ICON.whatsapp} WhatsApp</a>`:""}
+    </div>`;
+    block.innerHTML=`<div class="sm-person-top">
+      ${smAvHtml(p)}
+      <div class="sm-person-info">
+        <div class="sm-person-name">${esc(nameStr)}</div>
+        <div class="sm-person-title">${esc(p?p.title:"")}</div>
+      </div>
+    </div>
+    <span class="sm-person-role ${roleType}">${roleLabel}</span>
+    ${btnsHtml}`;
+    body.appendChild(block);
+  }
+
+  personBlock(s.supervisor,"sup");
+  personBlock(s.tl,"tl");
+  if(!s.supervisor&&!s.tl){body.innerHTML=`<p style="color:var(--muted);font-size:13px">No team assigned yet.</p>`;}
+  document.getElementById("sm-popup-overlay").classList.add("open");
+}
+
+function smClosePopup(e){
+  if(e&&e.target!==document.getElementById("sm-popup-overlay"))return;
+  document.getElementById("sm-popup-overlay").classList.remove("open");
+}
+
+async function fetchStores(){
+  const base=SM_API+"&cachebust="+Date.now();
+  try{const r=await fetch(base,{cache:"no-store",mode:"cors"});if(r.ok){const j=await r.json();if(Array.isArray(j)&&j.length)return j;}}catch(_){}
+  for(const proxy of CORS_PROXIES){
+    try{const r=await fetch(proxy(base),{cache:"no-store"});if(r.ok){const t=await r.text();if(t.trim().startsWith("["))return JSON.parse(t);}}catch(_){}
+  }
+  return null;
+}
+
+async function syncStores(){
+  const rows=await fetchStores();
+  if(rows){SM_STORES=smParseRows(rows);}
+  smRenderGrid();
+}
+
+/* ════════════════════════════════════════
+   TERRITORY BOARD
+════════════════════════════════════════ */
+
+// Team config — name/color only; stores come from the sheet
+
+// Stores loaded dynamically from sheet; keyed by lowercase store name
+
 
 async function fetchStores(){
   const base=STORES_API+"&cachebust="+Date.now();
@@ -1421,172 +1470,12 @@ function showToast(msg){
   toast._t=setTimeout(()=>toast.style.opacity="0",2200);
 }
 
-function closeTeamModal(e){
-  if(e&&e.target!==document.getElementById("team-modal-overlay"))return;
-  document.getElementById("team-modal-overlay").classList.remove("open");
-}
 
-function openTeamModal(storeName,teamKey,teamColor){
-  const overlay=document.getElementById("team-modal-overlay");
-  const body=document.getElementById("modal-body");
-  const teamCfg=SB_TEAMS.find(t=>t.key===teamKey)||{name:teamKey};
-  const teamName=teamCfg.name;
-  document.getElementById("modal-team-name").textContent=teamName;
-  document.getElementById("modal-store-name").textContent="📍 "+storeName;
-  body.innerHTML="";
-  const panelId=teamKey==="marwan"?"sb-team-marwan":"sb-team-moamen";
-  const panel=document.getElementById(panelId);
-  if(panel){
-    const members=panel.querySelectorAll(".sb-member");
-    if(members.length){
-      members.forEach(m=>{
-        const clone=m.cloneNode(true);
-        clone.querySelectorAll(".sb-member-btn").forEach(b=>{b.style.height="30px";b.style.fontSize="11px";});
-        body.appendChild(clone);
-      });
-    } else {
-      body.innerHTML=`<p style="color:var(--muted);font-size:13px;padding:12px 0">Team data loading — please try again shortly.</p>`;
-    }
-  }
-  document.querySelector(".team-modal-header").style.borderLeft=`4px solid ${teamColor}`;
-  overlay.classList.add("open");
-}
 
-function hexToRgb(hex){
-  const r=parseInt(hex.slice(1,3),16);
-  const g=parseInt(hex.slice(3,5),16);
-  const b=parseInt(hex.slice(5,7),16);
-  return `${r},${g},${b}`;
-}
 
-function sbBuild(){
-  const board=document.getElementById("sb-board");board.innerHTML="";
-  let total=0,active=0,soon=0;
 
-  SB_TEAMS.forEach(team=>{
-    const col=document.createElement("div");col.className="sb-col";
-    const hdr=document.createElement("div");hdr.className="sb-col-header";hdr.style.background=team.color;
-    hdr.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>${team.name}<span class="sb-col-header-count" id="cnt-${team.key}">…</span>`;
-    col.appendChild(hdr);
-    const body=document.createElement("div");body.className="sb-col-body";
 
-    if(!SB_STORES_LIVE){
-      const row=document.createElement("div");row.className="sb-card";
-      row.innerHTML=`<div style="color:var(--muted);font-size:11px;padding:4px 0">Loading stores…</div>`;
-      body.appendChild(row);
-    } else {
-      const teamStores=Object.values(SB_STORES_LIVE).filter(s=>s.team===team.key);
-      teamStores.forEach(store=>{
-        const isSoon=store.status==="soon";
-        if(isSoon)soon++;else active++;total++;
-        const card=document.createElement("div");card.className="sb-card";
-        card.dataset.status=store.status;card.dataset.name=store.name.toLowerCase();card.dataset.team=team.name;
-        card.innerHTML=`<div class="sb-card-icon" style="background:${team.color}18;color:${team.color}">${isSoon
-          ?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
-          :`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
-        }</div><div class="sb-card-body"><div class="sb-card-name">${store.name}</div></div><span class="sb-card-badge ${isSoon?"badge-soon":"badge-active"}">${isSoon?"Soon":"Active"}</span><button class="sb-view-team-btn" onclick="event.stopPropagation();openTeamModal('${store.name.replace(/'/g,"\\'")}','${team.key}','${team.color}')">Team</button>`;
-        body.appendChild(card);
-      });
-      const cnt=col.querySelector(`#cnt-${team.key}`);
-      if(cnt)cnt.textContent=teamStores.length+" stores";
-    }
-    col.appendChild(body);board.appendChild(col);
-  });
 
-  if(SB_STORES_LIVE){
-    document.getElementById("st-total").textContent=total;
-    document.getElementById("st-active").textContent=active;
-    document.getElementById("st-soon").textContent=soon;
-    document.getElementById("st-teams").textContent=SB_TEAMS.length;
-  }
-
-  sbBuildTeamPanel("sb-team-marwan","East Cairo & Sahel","#1a3a6b","Marwan");
-  sbBuildTeamPanel("sb-team-moamen","West & Central Cairo","#7B1717","Moemen");
-}
-
-function sbBuildTeamPanel(elId,displayName,color,mgrKey){
-  const el=document.getElementById(elId);if(!el)return;el.innerHTML="";
-  el.style.background=`linear-gradient(180deg, ${color}22 0%, ${color}08 40%, ${color}04 100%)`;
-
-  const hd=document.createElement("div");hd.className="sb-panel-heading";hd.style.background=color;
-  hd.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>${displayName}`;
-  el.appendChild(hd);
-
-  if(!DATA||!DATA.length){const ph=document.createElement("p");ph.style.cssText="font-size:10px;color:var(--muted);padding:8px 10px";ph.textContent="Loading…";el.appendChild(ph);return;}
-
-  // Use mgrKey as the manager's first name to search in DATA
-  const searchKey=(mgrKey||displayName).split(" ")[0].toLowerCase();
-  const mgr=DATA.find(p=>p.name.toLowerCase().startsWith(searchKey)&&!isVacant(p));
-  if(!mgr){const ph=document.createElement("p");ph.style.cssText="font-size:10px;color:var(--muted);padding:8px 10px";ph.textContent="Manager not found";el.appendChild(ph);return;}
-
-  // Collect all members, count total for opacity gradient
-  const members=[];
-  function walk(parentId){
-    DATA.filter(p=>p.parent&&p.parent.id===parentId).forEach(p=>{
-      const role=classifyRole(p);
-      if(role==="supervisor"||role==="tl"||isVacant(p)) members.push({p,role});
-      walk(p.id);
-    });
-  }
-  walk(mgr.id);
-
-  // Render with fading row backgrounds
-  const total=members.length||1;
-  members.forEach(({p,role},i)=>{
-    const opacity=(0.18-(i/total)*0.14).toFixed(3);
-    const card=sbMemberCard(p,role);
-    card.style.background=`rgba(${hexToRgb(color)},${opacity})`;
-    el.appendChild(card);
-  });
-}
-
-function sbMemberCard(p,role){
-  const vac=isVacant(p);
-  const bg=AV[hash(p.name)%AV.length];
-  const ini=initials(p.name)||"?";
-  const imgUrl=!vac?photoUrl(p.photo):null;
-  const avHtml=imgUrl
-    ?`<div class="sb-member-av" style="background:${bg}" data-fb-bg="${bg}" data-fb-txt="${esc(ini)}"><img src="${esc(imgUrl)}" alt="${esc(ini)}" onerror="avImgFail(this.parentElement)"></div>`
-    :`<div class="sb-member-av" style="background:${vac?"#CDD3DD":bg};color:${vac?"#9AA1AD":"#fff"}">${vac?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`:esc(ini)}</div>`;
-  const ph=phone(p.mobile);
-  const callBtn=ph?`<a class="sb-member-btn call" href="tel:${esc(ph.tel)}" title="Call">${ICON.phone}<span>Call</span></a>`:'';
-  const mailBtn=p.mail?`<button class="sb-member-btn mail copy-mail" onclick="copyMail(\`${esc(p.mail)}\`)" title="Copy email">${ICON.mail}<span>Email</span></button>`:'';
-  const waBtn=ph?`<a class="sb-member-btn wa" href="https://wa.me/${esc(ph.tel.replace(/\+/,''))}" target="_blank" title="WhatsApp">${ICON.whatsapp}<span>WhatsApp</span></a>`:'';
-  const btns=(callBtn||mailBtn||waBtn)?`<div class="sb-member-btns">${callBtn}${mailBtn}${waBtn}</div>`:'';
-  // Role badge — derived from classifyRole, same as org chart
-  let roleCls="",roleLabel="";
-  if(role==="supervisor"){roleCls="role-sup";roleLabel="Supervisor";}
-  else if(role==="tl"){roleCls="role-tl";roleLabel="Team Leader";}
-  const roleBadge=roleLabel?`<span class="sb-member-role ${roleCls}">${roleLabel}</span>`:"";
-  const div=document.createElement("div");div.className="sb-member";
-  div.innerHTML=`<div class="sb-member-top">
-    ${avHtml}
-    <div class="sb-member-meta">
-      <div class="sb-member-name">${vac?"Open role":esc(p.name)}</div>
-      <div class="sb-member-title">${esc(p.title||"")}</div>
-    </div>
-    ${roleBadge}
-  </div>${btns}`;
-  return div;
-}
-
-function sbSetFilter(btn,val){
-  sbCurrentFilter=val;
-  document.querySelectorAll(".sb-filter-btn").forEach(b=>{
-    const on=b.dataset.filter===val;b.classList.toggle("active",on);
-    b.style.background=on?(val==="active"?"#1E7A5C":val==="soon"?"#B8860B":"#1B2330"):"";
-    b.style.color=on?"#fff":"";
-  });
-  sbFilter();
-}
-function sbFilter(){
-  const q=document.getElementById("sb-search").value.toLowerCase().trim();
-  document.querySelectorAll(".sb-card").forEach(card=>{
-    const nm=!q||card.dataset.name.includes(q)||card.dataset.team.toLowerCase().includes(q);
-    const sm=sbCurrentFilter==="all"||card.dataset.status===sbCurrentFilter;
-    card.classList.toggle("hidden",!(nm&&sm));
-  });
-}
 </script>
 </body>
 </html>
