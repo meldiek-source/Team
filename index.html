@@ -1448,20 +1448,6 @@ async function syncStores(){
 // Stores loaded dynamically from sheet; keyed by lowercase store name
 
 
-async function fetchStores(){
-  const base=STORES_API+"&cachebust="+Date.now();
-  try{
-    const r=await fetch(base,{cache:"no-store",mode:"cors"});
-    if(r.ok){const j=await r.json();if(Array.isArray(j)&&j.length)return j;}
-  }catch(_){}
-  for(const proxy of CORS_PROXIES){
-    try{
-      const r=await fetch(proxy(base),{cache:"no-store"});
-      if(r.ok){const t=await r.text();if(t.trim().startsWith("["))return JSON.parse(t);}
-    }catch(_){}
-  }
-  return null;
-}
 
 let sbCurrentFilter="all";
 
