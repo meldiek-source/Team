@@ -1269,49 +1269,69 @@ const SM_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRl
 
 // Fallback static list — shown instantly, overwritten by live data
 const SM_FALLBACK=[
+  // East Cairo & Sahel (Omar Srour / Mina Isaac Fouad supervisors)
   {name:"Fifth Settlement - 1st District",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
   {name:"First Settlement - El Banafseg",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
   {name:"New Cairo - One Golden SQ",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
   {name:"Sherouk",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"Zahraa Maadi",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
-  {name:"Maadi 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-  {name:"Mokattam 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
   {name:"Obour",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
   {name:"Rehab",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
   {name:"CFC",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
   {name:"Madinty",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
   {name:"Gardenia Heights New Cairo",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
   {name:"New Cairo Hyde Park",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"Sheraton",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
+  {name:"Nasr City - 9th District",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
+  {name:"Heliopolis",status:"soon",supervisor:"Mina Isaac Fouad",tl:"Ahmed Essawy",team:"marwan"},
+  {name:"Marassi 2 - North Coast",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"Seashell - North Coast",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  // West & Central Cairo (Ashraf Ahmed / Muhammad Maher supervisors)
+  {name:"Zahraa Maadi",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
+  {name:"Maadi 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
+  {name:"Mokattam 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
+  {name:"Dokki",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
   {name:"6th of October",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
   {name:"Sheikh Zayed",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
   {name:"Hadayek Al Ahram",status:"active",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
-  {name:"Sheraton",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
-  {name:"Nasr City - 9th District",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
-  {name:"Dokki",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-  {name:"Heliopolis",status:"soon",supervisor:"Mina Isaac Fouad",tl:"Ahmed Essawy",team:"marwan"},
   {name:"Haram",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
+  {name:"Nasr City 2",status:"soon",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
+  {name:"Hadayek Al Koba",status:"soon",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
+  {name:"Downtown",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
+  {name:"Zayed New Giza",status:"soon",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
+  {name:"Zayed Beverily",status:"soon",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
+  {name:"6th of October Dream Land",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
+  {name:"Zamalek",status:"soon",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
 ];
 
 let SM_STORES=[];
 let smCurFilter="all";
 
 // Parse rows from Apps Script JSON
-// Col A=Store, B=Status, C=Supervisor, D=Team Leader, E=Team (optional)
+// Col A=Store Name, B=Status, C=Supervisor, D=Team Leader, E=Team (optional)
 function smParseRows(rows){
   if(!rows||rows.length<2)return[];
   const out=[];
   for(let i=1;i<rows.length;i++){
     const r=rows[i];
     const name=(r[0]||"").toString().trim();
-    if(!name||name==="Store Name")continue;
+    if(!name||name.toLowerCase().includes("store name"))continue;
     const status=(r[1]||"").toString().trim().toLowerCase();
-    out.push({
-      name,
-      status:status.includes("active")?"active":"soon",
-      supervisor:(r[2]||"").toString().trim(),
-      tl:(r[3]||"").toString().trim(),
-      team:(r[4]||"").toString().trim(),
-    });
+    const supervisor=(r[2]||"").toString().trim();
+    const tl=(r[3]||"").toString().trim();
+    const teamRaw=(r[4]||"").toString().trim().toLowerCase();
+    // Determine team: col E if present, else infer from supervisor
+    let team="moemen";
+    if(teamRaw.includes("marwan")||teamRaw.includes("east")||teamRaw.includes("sahel")){
+      team="marwan";
+    } else if(teamRaw.includes("moem")||teamRaw.includes("moam")||teamRaw.includes("west")){
+      team="moemen";
+    } else {
+      // Infer from supervisor name — Omar Srour & Mina Isaac Fouad = East Cairo
+      const sl=supervisor.toLowerCase();
+      if(sl.includes("omar")&&sl.includes("srour"))team="marwan";
+      else if(sl.includes("mina")&&sl.includes("isaac"))team="marwan";
+    }
+    out.push({name,status:status.includes("active")?"active":"soon",supervisor,tl,team});
   }
   return out;
 }
@@ -1406,11 +1426,12 @@ function smOpenPopup(idx){
     body.appendChild(lbl);
     const block=document.createElement("div");block.className="sm-person";
     const ph=p?phone(p.mobile):null;
-    const btnsHtml=`<div class="sm-person-btns">
+    const hasContact=ph||(p&&p.mail);
+    const btnsHtml=hasContact?`<div class="sm-person-btns">
       ${ph?`<a class="sm-person-btn call" href="tel:${esc(ph.tel)}">${ICON.phone} Call</a>`:""}
       ${p&&p.mail?`<button class="sm-person-btn mail copy-mail" onclick="copyMail('${esc(p.mail)}')">${ICON.mail} Email</button>`:""}
       ${ph?`<a class="sm-person-btn wa" href="https://wa.me/${esc(ph.tel.replace(/\+/,''))}" target="_blank">${ICON.whatsapp} WhatsApp</a>`:""}
-    </div>`;
+    </div>`:`<div style="font-size:11px;color:var(--muted);margin-top:4px">No contact details on file</div>`;
     block.innerHTML=`<div class="sm-person-top">
       ${smAvHtml(p)}
       <div class="sm-person-info">
