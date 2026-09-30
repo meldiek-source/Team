@@ -1261,7 +1261,32 @@ setInterval(syncOncall,REFRESH_MS);
 ════════════════════════════════════════ */
 const SM_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRlmZSHKxs8qqE5FfM_76aNzA8MTLortEgbMm41DaRjOVQ/exec?type=stores";
 
-let SM_STORES=[];   // parsed store objects
+// Fallback static list — shown instantly, overwritten by live data
+const SM_FALLBACK=[
+  {name:"Fifth Settlement - 1st District",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"First Settlement - El Banafseg",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"New Cairo - One Golden SQ",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"Sherouk",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"Zahraa Maadi",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
+  {name:"Maadi 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
+  {name:"Mokattam 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
+  {name:"Obour",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"Rehab",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"CFC",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"Madinty",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"Gardenia Heights New Cairo",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
+  {name:"New Cairo Hyde Park",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
+  {name:"6th of October",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
+  {name:"Sheikh Zayed",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
+  {name:"Hadayek Al Ahram",status:"active",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
+  {name:"Sheraton",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
+  {name:"Nasr City - 9th District",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
+  {name:"Dokki",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
+  {name:"Heliopolis",status:"soon",supervisor:"Mina Isaac Fouad",tl:"Ahmed Essawy",team:"marwan"},
+  {name:"Haram",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
+];
+
+let SM_STORES=[];
 let smCurFilter="all";
 
 // Parse rows from Apps Script JSON
@@ -1287,10 +1312,11 @@ function smParseRows(rows){
 
 // Look up a person in org chart DATA by name
 function smFindPerson(name){
-  if(!name||!DATA.length)return null;
+  if(!name)return null;
+  if(!DATA||!DATA.length)return null;
   const nl=name.toLowerCase().trim();
   return DATA.find(p=>{
-    const pl=p.name.toLowerCase().trim();
+    const pl=(p.name||"").toLowerCase().trim();
     return pl===nl||pl.includes(nl)||nl.includes(pl);
   })||null;
 }
@@ -1411,9 +1437,25 @@ async function fetchStores(){
 }
 
 async function syncStores(){
-  const rows=await fetchStores();
-  if(rows){SM_STORES=smParseRows(rows);}
-  smRenderGrid();
+  // Show fallback immediately so page is never blank
+  if(!SM_STORES.length){
+    SM_STORES=SM_FALLBACK;
+    smRenderGrid();
+  }
+  // Then fetch live data and update
+  try{
+    const rows=await fetchStores();
+    if(rows&&rows.length>1){
+      const live=smParseRows(rows);
+      if(live.length){
+        SM_STORES=live;
+        smRenderGrid();
+      }
+    }
+  }catch(e){
+    // Fallback already showing — silently keep it
+    console.warn("Store fetch failed:",e.message);
+  }
 }
 
 /* ════════════════════════════════════════
