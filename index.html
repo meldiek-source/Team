@@ -1132,13 +1132,6 @@ function switchTab(t){
   if(t==="stores") syncStores();
 }
 
-async function syncStores(){
-  const rows=await fetchStores();
-  if(rows){
-    SB_STORES_LIVE=parseStoresRows(rows);
-  }
-  sbBuild();
-}
 
 /* ════════════════════════════════════════
    ON-CALL
@@ -1268,40 +1261,6 @@ setInterval(syncOncall,REFRESH_MS);
 const SM_API="https://script.google.com/macros/s/AKfycbzAI9jVZKHG_fEhuRXkZlSpGRlmZSHKxs8qqE5FfM_76aNzA8MTLortEgbMm41DaRjOVQ/exec?type=stores";
 
 // Fallback static list — shown instantly, overwritten by live data
-const SM_FALLBACK=[
-  // East Cairo & Sahel (Omar Srour / Mina Isaac Fouad supervisors)
-  {name:"Fifth Settlement - 1st District",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"First Settlement - El Banafseg",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  {name:"New Cairo - One Golden SQ",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  {name:"Sherouk",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"Obour",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"Rehab",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  {name:"CFC",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  {name:"Madinty",status:"soon",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"Gardenia Heights New Cairo",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"New Cairo Hyde Park",status:"soon",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  {name:"Sheraton",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
-  {name:"Nasr City - 9th District",status:"active",supervisor:"Mina Isaac Fouad",tl:"Maged Mohamed",team:"marwan"},
-  {name:"Heliopolis",status:"soon",supervisor:"Mina Isaac Fouad",tl:"Ahmed Essawy",team:"marwan"},
-  {name:"Marassi 2 - North Coast",status:"active",supervisor:"Omar Srour",tl:"Hossam Mohamed",team:"marwan"},
-  {name:"Seashell - North Coast",status:"active",supervisor:"Omar Srour",tl:"Abdullah Aref",team:"marwan"},
-  // West & Central Cairo (Ashraf Ahmed / Muhammad Maher supervisors)
-  {name:"Zahraa Maadi",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
-  {name:"Maadi 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-  {name:"Mokattam 2",status:"active",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
-  {name:"Dokki",status:"active",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-  {name:"6th of October",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
-  {name:"Sheikh Zayed",status:"active",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
-  {name:"Hadayek Al Ahram",status:"active",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
-  {name:"Haram",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
-  {name:"Nasr City 2",status:"soon",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-  {name:"Hadayek Al Koba",status:"soon",supervisor:"Ashraf Ahmed",tl:"Assem Abdelwahid",team:"moemen"},
-  {name:"Downtown",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
-  {name:"Zayed New Giza",status:"soon",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
-  {name:"Zayed Beverily",status:"soon",supervisor:"Muhammad Maher",tl:"Ahmed Ragheb",team:"moemen"},
-  {name:"6th of October Dream Land",status:"soon",supervisor:"Muhammad Maher",tl:"Abdullah Mahmoud",team:"moemen"},
-  {name:"Zamalek",status:"soon",supervisor:"Ashraf Ahmed",tl:"Ziad Khaled",team:"moemen"},
-];
 
 let SM_STORES=[];
 let smCurFilter="all";
@@ -1465,24 +1424,18 @@ async function fetchStores(){
 }
 
 async function syncStores(){
-  // Show fallback immediately so page is never blank
-  if(!SM_STORES.length){
-    SM_STORES=SM_FALLBACK;
-    smRenderGrid();
-  }
-  // Then fetch live data and update
+  const grid=document.getElementById("sm-grid");
+  if(grid) grid.innerHTML=`<div class="empty-state"><h2>Loading stores…</h2><p>Fetching live data from sheet</p></div>`;
   try{
     const rows=await fetchStores();
-    if(rows&&rows.length>1){
-      const live=smParseRows(rows);
-      if(live.length){
-        SM_STORES=live;
-        smRenderGrid();
-      }
-    }
+    if(!rows||rows.length<2) throw new Error("No data returned from sheet");
+    const live=smParseRows(rows);
+    if(!live.length) throw new Error("Sheet returned 0 stores");
+    SM_STORES=live;
+    smRenderGrid();
   }catch(e){
-    // Fallback already showing — silently keep it
-    console.warn("Store fetch failed:",e.message);
+    if(grid) grid.innerHTML=`<div class="empty-state"><h2>Could not load stores</h2><p style="color:var(--muted);font-size:12px">${e.message}</p></div>`;
+    console.error("Store fetch error:",e);
   }
 }
 
