@@ -24,7 +24,7 @@
     --shadow:0 1px 2px rgba(20,28,44,.05),0 8px 22px rgba(20,28,44,.07);
     --shadow-hover:0 2px 4px rgba(20,28,44,.08),0 16px 34px rgba(20,28,44,.12);
     --radius:14px;
-    --card-w:234px;
+    --card-w:176px;
     --conn:30px;
     --l1:#2C5F8A;
     --l1-soft:#E8F0F7;
@@ -156,7 +156,7 @@
   }
   .stage{
     min-width:max-content; min-height:max-content;
-    padding:50px 80px 110px;
+    padding:30px 16px 80px;
     display:flex; justify-content:center;
   }
 
@@ -188,7 +188,7 @@
   /* Each L1 column */
   .l1-col{
     display:flex; flex-direction:column; align-items:center;
-    padding:0 18px;
+    padding:0 6px;
     position:relative;
   }
 
@@ -1081,6 +1081,7 @@ async function sync(){
 
 /* ── ZOOM ── */
 function applyZoom(){document.getElementById("stage").style.zoom=zoom;document.getElementById("zoom-level").textContent=Math.round(zoom*100)+"%";}
+let autoFit=true;
 function setZoom(z){zoom=Math.min(1.4,Math.max(.35,+z.toFixed(2)));applyZoom();}
 
 let centered=false;
@@ -1108,7 +1109,16 @@ document.getElementById("collapse-all").onclick=()=>{
 };
 document.getElementById("zoom-in").onclick=()=>setZoom(zoom+.1);
 document.getElementById("zoom-out").onclick=()=>setZoom(zoom-.1);
-document.getElementById("zoom-reset").onclick=()=>setZoom(1);
+document.getElementById("zoom-reset").onclick=()=>fitToWidth();
+function fitToWidth(){
+  const c=document.getElementById("canvas"),st=document.getElementById("stage");
+  if(!c||!c.clientWidth)return;
+  st.style.zoom=1;
+  const w=st.scrollWidth;
+  zoom=Math.max(.2,Math.min(1,+((c.clientWidth-4)/w).toFixed(3)));
+  applyZoom();c.scrollLeft=0;
+}
+window.addEventListener("resize",()=>fitToWidth());
 
 /* ── PHOTO FALLBACK ── */
 function avImgFail(el){
@@ -1117,6 +1127,7 @@ function avImgFail(el){
 }
 
 /* ── BOOT ── */
+const _render=render;render=function(){_render.apply(this,arguments);fitToWidth();};
 loadSnapshot();
 sync();
 setInterval(sync,REFRESH_MS);
