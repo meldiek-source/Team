@@ -570,7 +570,8 @@
   .card{cursor:pointer}
   #pmodal{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
   #pmodal.open{display:flex}
-  #pmodal .card{width:min(340px,90vw);zoom:1.15;cursor:default;transform:none!important;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  @media (max-width:768px){#pmodal .card{zoom:1.2!important;max-width:90vw!important}}
+  #pmodal .card{width:min(340px,90vw);zoom:1.2;max-width:90vw;cursor:default;transform:none!important;box-shadow:0 20px 60px rgba(0,0,0,.4)}
   #pmodal .pname{display:block;-webkit-line-clamp:unset}
   #pmodal .ptitle{display:block;-webkit-line-clamp:unset}
   #pmodal .contact .val{white-space:normal;word-break:break-all}
